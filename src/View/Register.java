@@ -166,7 +166,7 @@ public class Register extends javax.swing.JPanel {
         frame.loginNav();
     }//GEN-LAST:event_backBtnActionPerformed
 
-    // Checks if username has at least 6 characters, already exists in the database, and contains whitespaces.
+    // Checks if username has at least 6 characters, contains white spaces, and already exists in the database.
     private void checkUsername(){
         
         // Checks if username has at least 6 characters
