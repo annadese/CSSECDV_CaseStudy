@@ -39,6 +39,8 @@ public class Login extends javax.swing.JPanel {
         registerBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registerBtnActionPerformed(evt);
+				usernameFld.setText("");
+				passwordFld.setText("");
             }
         });
 
@@ -47,6 +49,8 @@ public class Login extends javax.swing.JPanel {
         loginBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loginBtnActionPerformed(evt);
+				usernameFld.setText("");
+				passwordFld.setText("");
             }
         });
 
