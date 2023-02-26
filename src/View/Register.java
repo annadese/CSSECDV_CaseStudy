@@ -1,9 +1,16 @@
 
 package View;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Register extends javax.swing.JPanel {
 
     public Frame frame;
+    private Boolean isUsernameValid = false;
+    private Boolean isPassValValid = false;
+    private Boolean isPassLenValid = false;
+    private Boolean isConfPassValid = false;
     
     public Register() {
         initComponents();
@@ -19,6 +26,9 @@ public class Register extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         confpassFld = new javax.swing.JTextField();
         backBtn = new javax.swing.JButton();
+        errorConfPassword = new javax.swing.JTextField();
+        errorUsername = new javax.swing.JTextField();
+        errorPassword = new javax.swing.JTextField();
 
         registerBtn.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         registerBtn.setText("REGISTER");
@@ -56,6 +66,38 @@ public class Register extends javax.swing.JPanel {
             }
         });
 
+        errorConfPassword.setEditable(false);
+        errorConfPassword.setForeground(new java.awt.Color(204, 0, 51));
+        errorConfPassword.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        errorConfPassword.setText("Passwords do not match.");
+        errorConfPassword.setToolTipText("");
+        errorConfPassword.setAlignmentX(0.0F);
+        errorConfPassword.setAlignmentY(0.0F);
+        errorConfPassword.setBorder(null);
+        errorConfPassword.setDisabledTextColor(new java.awt.Color(242, 242, 242));
+        errorConfPassword.setEnabled(false);
+
+        errorUsername.setEditable(false);
+        errorUsername.setForeground(new java.awt.Color(204, 0, 51));
+        errorUsername.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        errorUsername.setText("Username must have at least 6 characters.");
+        errorUsername.setAlignmentX(0.0F);
+        errorUsername.setAlignmentY(0.0F);
+        errorUsername.setBorder(null);
+        errorUsername.setDisabledTextColor(new java.awt.Color(242, 242, 242));
+        errorUsername.setEnabled(false);
+
+        errorPassword.setEditable(false);
+        errorPassword.setForeground(new java.awt.Color(204, 0, 51));
+        errorPassword.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        errorPassword.setText("Password must have at least 8 characters and must be a combination of letters, numbers, and special characters.");
+        errorPassword.setToolTipText("");
+        errorPassword.setAlignmentX(0.0F);
+        errorPassword.setAlignmentY(0.0F);
+        errorPassword.setBorder(null);
+        errorPassword.setDisabledTextColor(new java.awt.Color(242, 242, 242));
+        errorPassword.setEnabled(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -76,6 +118,9 @@ public class Register extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(backBtn)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(errorConfPassword, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(errorUsername)
+            .addComponent(errorPassword)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -86,29 +131,111 @@ public class Register extends javax.swing.JPanel {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40)
                 .addComponent(usernameFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(errorUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(passwordFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(errorPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(confpassFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(errorConfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
-        frame.registerAction(usernameFld.getText(), passwordFld.getText(), confpassFld.getText());
-        frame.loginNav();
+        checkUsername();
+        checkPassword();
+        checkConfirmPassword();
+        
+        if (isUsernameValid && isPassValValid && isPassLenValid && isConfPassValid){
+            frame.registerAction(usernameFld.getText(), passwordFld.getText(), confpassFld.getText());
+            frame.loginNav();
+        }
     }//GEN-LAST:event_registerBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
         frame.loginNav();
     }//GEN-LAST:event_backBtnActionPerformed
 
+    // Checks if the username has at least 6 characters
+    private void checkUsername(){
+        if (usernameFld.getText().length() >= 6){
+            isUsernameValid = true;
+            errorUsername.setEnabled(false);
+        } else{
+            isUsernameValid = false;
+            errorUsername.setEnabled(true);
+        }
+    }
+    
+    // Checks if the password contains at least 8 characters and is a combination of letters, numbers, and special characters.
+    private void checkPassword(){
+
+        // Checks if the password has at least 8 characters
+        if (passwordFld.getText().length() >= 8){
+            isPassLenValid = true;
+        } else{
+            isPassLenValid = false;
+        }
+
+        // Checks if the password contains at least 1 special character
+        Pattern patternSpecialChar = Pattern.compile("[^a-zA-Z0-9]");
+        Matcher matcherSpecialChar = patternSpecialChar.matcher(passwordFld.getText());
+        boolean containsSpecialChar = matcherSpecialChar.find();
+        
+        // Checks if the password contains at least 1 letter
+        Pattern patternLetter = Pattern.compile("[a-zA-Z]");
+        Matcher matcherLetter = patternLetter.matcher(passwordFld.getText());
+        boolean containsLetter = matcherLetter.find();
+        
+        // Checks if the password contains at least 1 number
+        Pattern patternNum = Pattern.compile("[0-9]");
+        Matcher matcherNum = patternNum.matcher(passwordFld.getText());
+        boolean containsNum = matcherNum.find();
+        
+        if(containsSpecialChar && containsLetter && containsNum){
+            isPassValValid = true;
+        } else{
+            isPassValValid = false;
+        }
+        
+        // Sets the text for the error message
+        if(isPassLenValid == false && isPassValValid == false){
+            errorPassword.setText("Password must have at least 8 characters and must be a combination of letters, numbers, and special characters.");
+            errorPassword.setEnabled(true);
+        } else if(isPassLenValid == false && isPassValValid == true){
+            errorPassword.setText("Password must have at least 8 characters.");
+            errorPassword.setEnabled(true);
+        } else if(isPassLenValid == true && isPassValValid == false){
+            errorPassword.setText("Password must be a combination of letters, numbers, and special characters.");
+            errorPassword.setEnabled(true);
+        } else{
+            errorPassword.setEnabled(false);
+        }
+    }
+    
+    // Checks if the values of password and confirm password fields are similar
+    private void checkConfirmPassword(){
+        if (passwordFld.getText().equals(confpassFld.getText())){
+            isConfPassValid = true;
+            errorConfPassword.setEnabled(false);
+        } else{
+            isConfPassValid = false;
+            errorConfPassword.setEnabled(true);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backBtn;
     private javax.swing.JTextField confpassFld;
+    private javax.swing.JTextField errorConfPassword;
+    private javax.swing.JTextField errorPassword;
+    private javax.swing.JTextField errorUsername;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField passwordFld;
     private javax.swing.JButton registerBtn;
