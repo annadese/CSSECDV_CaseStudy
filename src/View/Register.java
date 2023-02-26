@@ -1,12 +1,16 @@
 
 package View;
 
+import Model.User;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Register extends javax.swing.JPanel {
 
     public Frame frame;
+    private Boolean isUsernameLenValid = false;
+    private Boolean  isUsernameCharValid = false;
     private Boolean isUsernameValid = false;
     private Boolean isPassValValid = false;
     private Boolean isPassLenValid = false;
@@ -152,7 +156,7 @@ public class Register extends javax.swing.JPanel {
         checkPassword();
         checkConfirmPassword();
         
-        if (isUsernameValid && isPassValValid && isPassLenValid && isConfPassValid){
+        if (isUsernameLenValid && isUsernameCharValid && isUsernameValid && isPassValValid && isPassLenValid && isConfPassValid){
             frame.registerAction(usernameFld.getText(), passwordFld.getText(), confpassFld.getText());
             frame.loginNav();
         }
@@ -162,15 +166,59 @@ public class Register extends javax.swing.JPanel {
         frame.loginNav();
     }//GEN-LAST:event_backBtnActionPerformed
 
-    // Checks if the username has at least 6 characters
+    // Checks if username has at least 6 characters, already exists in the database, and contains whitespaces.
     private void checkUsername(){
+        
+        // Checks if username has at least 6 characters
         if (usernameFld.getText().length() >= 6){
-            isUsernameValid = true;
-            errorUsername.setEnabled(false);
+            isUsernameLenValid = true;
         } else{
-            isUsernameValid = false;
-            errorUsername.setEnabled(true);
+            isUsernameLenValid = false;
         }
+        
+        // Checks if username contains a white space
+        if(usernameFld.getText().contains(" ")){
+            isUsernameCharValid = false;
+        } else{
+            isUsernameCharValid = true;
+        }
+        
+        // Checks if username already exists in the database
+        ArrayList<User> userList = frame.getUserList();
+        isUsernameValid = true;
+        for(int i = 0; i < userList.size(); i++){
+            if(userList.get(i).getUsername().equals(usernameFld.getText())){
+                System.out.println("\nOOOPSS\n");
+                isUsernameValid = false;
+            }
+        }
+        
+        // Sets the text for the error message
+        if(isUsernameLenValid == false && isUsernameCharValid == false && isUsernameValid == false){
+            errorUsername.setEnabled(true);
+            errorUsername.setText("Username must have at least 6 characters, cannot contain white spaces, and already exists.");
+        } else if (isUsernameLenValid == false && isUsernameCharValid == false &&isUsernameValid == true){
+            errorUsername.setEnabled(true);
+            errorUsername.setText("Username must have at least 6 characters, and cannot contain white spaces.");
+        } else if(isUsernameLenValid == true && isUsernameCharValid == false && isUsernameValid == false){
+            errorUsername.setEnabled(true);
+            errorUsername.setText("Username cannot contain white spaces, and already exists.");
+        } else if(isUsernameLenValid == false && isUsernameCharValid == true && isUsernameValid == false){
+            errorUsername.setEnabled(true);
+            errorUsername.setText("Username must have at least 6 characters, and already exists.");
+        } else if(isUsernameLenValid == false && isUsernameCharValid == true && isUsernameValid == true){
+            errorUsername.setEnabled(true);
+            errorUsername.setText("Username must have at least 6 characters.");
+        } else if(isUsernameLenValid == true && isUsernameCharValid == false && isUsernameValid == true){
+            errorUsername.setEnabled(true);
+            errorUsername.setText("Username cannot contain white spaces.");
+        } else if(isUsernameLenValid == true && isUsernameCharValid == true && isUsernameValid == false){
+            errorUsername.setEnabled(true);
+            errorUsername.setText("Username already exists.");
+        } else{
+            errorUsername.setEnabled(false);
+        }
+            
     }
     
     // Checks if the password contains at least 8 characters and is a combination of letters, numbers, and special characters.

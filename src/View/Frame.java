@@ -1,9 +1,11 @@
 package View;
 
 import Controller.Main;
+import Model.User;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.util.ArrayList;
 import javax.swing.WindowConstants;
 
 public class Frame extends javax.swing.JFrame {
@@ -258,6 +260,11 @@ public class Frame extends javax.swing.JFrame {
     
     public void registerAction(String username, String password, String confpass){
         main.sqlite.addUser(username, password);
+    }
+    
+    // Returns the list of users for it to be accessed by files in View.
+    public ArrayList<User> getUserList(){
+        return main.sqlite.getUsers();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
