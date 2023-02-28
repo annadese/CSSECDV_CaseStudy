@@ -4,6 +4,7 @@ import Model.History;
 import Model.Logs;
 import Model.Product;
 import Model.User;
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -11,33 +12,18 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList; 
 import java.security.MessageDigest;
-import java.security.SecureRandom;
-import java.util.Base64;
 
 public class SQLite {
     
     public int DEBUG_MODE = 0;
     String driverURL = "jdbc:sqlite:" + "database.db";
     
-    public String bytetoString(byte[] input) {
-        return Base64.getEncoder().encodeToString(input);
-    }
-           
-    public byte[] generateSalt() {
-        SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
-        
-        return salt;
-    }
     
-    public byte[] getSaltedHash(String s) throws Exception {
+    public String getHash(String s) throws Exception {
         MessageDigest m = MessageDigest.getInstance("SHA-512");
-        m.reset();
-        m.update(generateSalt());
-        byte[] saltedHash = m.digest(s.getBytes());
-
-        return saltedHash;
+        m.update(s.getBytes(), 0,s.length());
+        
+        return new BigInteger(1, m.digest()).toString(16);
    }
     
     public void createNewDatabase() {
@@ -204,10 +190,10 @@ public class SQLite {
     }
     
     public void addUser(String username, String password) {
-        byte[] hashedPass = null;
+        String hashedPass = null;
         
         try {
-            hashedPass = getSaltedHash(password);
+            hashedPass = getHash(password);
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -311,10 +297,10 @@ public class SQLite {
     }
     
     public void addUser(String username, String password, int role) {
-        byte[] hashedPass = null;
+        String hashedPass = null;
         
         try {
-            hashedPass = getSaltedHash(password);
+            hashedPass = getHash(password);
         } catch(Exception e) {
             e.printStackTrace();
         }
