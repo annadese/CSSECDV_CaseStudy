@@ -13,9 +13,9 @@ public class Login extends javax.swing.JPanel {
     private Boolean isUsernameValid = false;
     private Boolean isPassValid = false;
     
+    private int userAttempts = 0;
     private int userIndex = 0;
     private ArrayList<User> userList;
-
     
     public Login() {
         initComponents();
@@ -31,6 +31,7 @@ public class Login extends javax.swing.JPanel {
         registerBtn = new javax.swing.JButton();
         loginBtn = new javax.swing.JButton();
         errorMessage = new javax.swing.JTextField();
+        errorMaxAttempt = new javax.swing.JTextField();
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -73,6 +74,16 @@ public class Login extends javax.swing.JPanel {
         errorMessage.setDisabledTextColor(new java.awt.Color(242, 242, 242));
         errorMessage.setEnabled(false);
 
+        errorMaxAttempt.setEditable(false);
+        errorMaxAttempt.setForeground(new java.awt.Color(204, 0, 51));
+        errorMaxAttempt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        errorMaxAttempt.setText("Reached maximum log in attempts. You are locked for 5 minutes.");
+        errorMaxAttempt.setAlignmentX(0.0F);
+        errorMaxAttempt.setAlignmentY(0.0F);
+        errorMaxAttempt.setBorder(null);
+        errorMaxAttempt.setDisabledTextColor(new java.awt.Color(242, 242, 242));
+        errorMaxAttempt.setEnabled(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -89,6 +100,10 @@ public class Login extends javax.swing.JPanel {
                     .addComponent(passwordFld, javax.swing.GroupLayout.Alignment.LEADING))
                 .addContainerGap(200, Short.MAX_VALUE))
             .addComponent(errorMessage, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(errorMaxAttempt)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -105,7 +120,9 @@ public class Login extends javax.swing.JPanel {
                     .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(errorMessage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(101, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(errorMaxAttempt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(73, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
@@ -123,9 +140,15 @@ public class Login extends javax.swing.JPanel {
         
         if(isUsernameValid && isPassValid){
             frame.mainNav();
+            userAttempts = 0; // resets the number of attempts since the user already logged in successfully
             resetLogInPage();
         } else{
-            errorMessage.setEnabled(true);
+            try {
+                errorMessage.setEnabled(true);
+                checkAttempts();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     }//GEN-LAST:event_loginBtnActionPerformed
@@ -143,7 +166,29 @@ public class Login extends javax.swing.JPanel {
         errorMessage.setEnabled(false);
     }
 
-// Checks if username exists in the database
+    private void checkAttempts() throws InterruptedException{
+        userAttempts++;
+        
+        if(userAttempts == 3){
+            userAttempts = 0;
+            errorMaxAttempt.setEnabled(true);
+            System.out.println("OOPPS");
+            //loginBtn.setEnabled(false);
+        }
+        
+        /*if (userAttempts == 3){
+            errorMaxAttempt.setEnabled(true);
+            loginBtn.setEnabled(false);
+            System.out.println("OOPPS");
+            
+            Thread.sleep(10000);
+            loginBtn.setEnabled(true);
+            errorMaxAttempt.setEnabled(false);
+            userAttempts = 0;
+        }*/
+    }
+    
+    // Checks if username exists in the database
     private void checkUsername(){
         userList = frame.getUserList();
         isUsernameValid = false;
@@ -166,6 +211,7 @@ public class Login extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField errorMaxAttempt;
     private javax.swing.JTextField errorMessage;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JButton loginBtn;
