@@ -3,6 +3,7 @@ package View;
 
 import Model.User;
 import java.util.ArrayList;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -77,7 +78,7 @@ public class Login extends javax.swing.JPanel {
         errorMaxAttempt.setEditable(false);
         errorMaxAttempt.setForeground(new java.awt.Color(204, 0, 51));
         errorMaxAttempt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        errorMaxAttempt.setText("Reached maximum log in attempts. You are locked for 5 minutes.");
+        errorMaxAttempt.setText("Reached maximum log in attempts. You cannot log in for 5 minutes.");
         errorMaxAttempt.setAlignmentX(0.0F);
         errorMaxAttempt.setAlignmentY(0.0F);
         errorMaxAttempt.setBorder(null);
@@ -128,6 +129,7 @@ public class Login extends javax.swing.JPanel {
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
         checkUsername();
         
+        // If username is valid, then it will check if the password is correct
         if(isUsernameValid){
             try {
                 checkPassword();
@@ -138,9 +140,11 @@ public class Login extends javax.swing.JPanel {
             isPassValid = false;
         }
         
+        // Checks for the validity of both username and password for the user to proceed to the main page
         if(isUsernameValid && isPassValid){
             frame.mainNav();
             userAttempts = 0; // resets the number of attempts since the user already logged in successfully
+            errorMaxAttempt.setEnabled(false);
             resetLogInPage();
         } else{
             try {
@@ -158,34 +162,40 @@ public class Login extends javax.swing.JPanel {
         resetLogInPage();
     }//GEN-LAST:event_registerBtnActionPerformed
 
-    // Clears all input fields and resets all error messages
+    // Clears all input fields and resets the error message
     private void resetLogInPage(){
         usernameFld.setText("");
         passwordFld.setText("");
-        
         errorMessage.setEnabled(false);
     }
 
+    // Executes when user has an unsuccessful login and checks if user has reached max number of log in attempts
     private void checkAttempts() throws InterruptedException{
         userAttempts++;
         
+        // Max number of log in attempts is 3
         if(userAttempts == 3){
-            userAttempts = 0;
-            errorMaxAttempt.setEnabled(true);
-            System.out.println("OOPPS");
-            //loginBtn.setEnabled(false);
-        }
-        
-        /*if (userAttempts == 3){
             errorMaxAttempt.setEnabled(true);
             loginBtn.setEnabled(false);
-            System.out.println("OOPPS");
-            
-            Thread.sleep(10000);
-            loginBtn.setEnabled(true);
-            errorMaxAttempt.setEnabled(false);
             userAttempts = 0;
-        }*/
+            
+            // Timer class is used to disable the log in button for 5 minutes
+            Timer timer = new Timer();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                   loginBtn.setEnabled(true);
+                   errorMaxAttempt.setEnabled(false);
+                   timer.cancel();
+                }
+            };
+            
+            // Schedules the timer
+            timer.schedule(task, 300000, 300000);
+            
+            /* for testing only
+            timer.schedule(task, 10000, 10000);*/
+        }
     }
     
     // Checks if username exists in the database
