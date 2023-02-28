@@ -163,17 +163,25 @@ public class Register extends javax.swing.JPanel {
         if (isUsernameLenValid && isUsernameCharValid && isUsernameValid && isPassValValid && isPassLenValid && isConfPassValid){
             frame.registerAction(usernameFld.getText(), passwordFld.getText(), confpassFld.getText());
             frame.loginNav();
-			
-			usernameFld.setText("");
-            passwordFld.setText("");
-            confpassFld.setText("");
+            resetRegPage();
         }
     }//GEN-LAST:event_registerBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
         frame.loginNav();
+        resetRegPage();
     }//GEN-LAST:event_backBtnActionPerformed
 
+    // Clears all input fields and resets all error messages
+    private void resetRegPage(){
+        usernameFld.setText("");
+        passwordFld.setText("");
+        confpassFld.setText("");
+        
+        errorUsername.setEnabled(false);
+        errorPassword.setEnabled(false);
+        errorConfPassword.setEnabled(false);
+    }
     // Checks if username has at least 6 characters, contains white spaces, and already exists in the database.
     private void checkUsername(){
         
@@ -196,7 +204,6 @@ public class Register extends javax.swing.JPanel {
         isUsernameValid = true;
         for(int i = 0; i < userList.size(); i++){
             if(userList.get(i).getUsername().equals(usernameFld.getText())){
-                System.out.println("\nOOOPSS\n");
                 isUsernameValid = false;
             }
         }

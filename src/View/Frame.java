@@ -267,6 +267,11 @@ public class Frame extends javax.swing.JFrame {
         return main.sqlite.getUsers();
     }
 
+    // Returns the hashed password for it to be accessed by files in View.
+    public String getHashPass(String origPass)throws Exception{
+        return main.sqlite.getHash(origPass);
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Container;
     private javax.swing.JPanel Content;
