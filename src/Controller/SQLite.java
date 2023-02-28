@@ -10,8 +10,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList; 
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -21,19 +19,25 @@ public class SQLite {
     public int DEBUG_MODE = 0;
     String driverURL = "jdbc:sqlite:" + "database.db";
     
-    public String encryptString(String s) throws Exception {
-        // Generate salt
+    public String bytetoString(byte[] input) {
+        return Base64.getEncoder().encodeToString(input);
+    }
+           
+    public byte[] generateSalt() {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
         random.nextBytes(salt);
         
-        // Hash string
+        return salt;
+    }
+    
+    public byte[] getSaltedHash(String s) throws Exception {
         MessageDigest m = MessageDigest.getInstance("SHA-512");
-        m.update(salt);
-        String hashedPass = new BigInteger(1,m.digest()).toString(16);
-        String salthashPass = Base64.getEncoder().encodeToString(m.digest(hashedPass.getBytes(StandardCharsets.UTF_8)));
+        m.reset();
+        m.update(generateSalt());
+        byte[] saltedHash = m.digest(s.getBytes());
 
-        return salthashPass;
+        return saltedHash;
    }
     
     public void createNewDatabase() {
@@ -200,10 +204,10 @@ public class SQLite {
     }
     
     public void addUser(String username, String password) {
-        String hashedPass = null;
+        byte[] hashedPass = null;
         
         try {
-            hashedPass = encryptString(password);
+            hashedPass = getSaltedHash(password);
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -307,10 +311,10 @@ public class SQLite {
     }
     
     public void addUser(String username, String password, int role) {
-        String hashedPass = null;
+        byte[] hashedPass = null;
         
         try {
-            hashedPass = encryptString(password);
+            hashedPass = getSaltedHash(password);
         } catch(Exception e) {
             e.printStackTrace();
         }
