@@ -161,7 +161,7 @@ public class Register extends javax.swing.JPanel {
         checkConfirmPassword();
         
         if (isUsernameLenValid && isUsernameCharValid && isUsernameValid && isPassValValid && isPassLenValid && isConfPassValid){
-            frame.registerAction(usernameFld.getText(), passwordFld.getText(), confpassFld.getText());
+            frame.registerAction(usernameFld.getText().toLowerCase(), passwordFld.getText(), confpassFld.getText());
             frame.loginNav();
             resetRegPage();
         }
@@ -203,7 +203,7 @@ public class Register extends javax.swing.JPanel {
         ArrayList<User> userList = frame.getUserList();
         isUsernameValid = true;
         for(int i = 0; i < userList.size(); i++){
-            if(userList.get(i).getUsername().equals(usernameFld.getText())){
+            if(userList.get(i).getUsername().equals(usernameFld.getText().toLowerCase())){
                 isUsernameValid = false;
             }
         }

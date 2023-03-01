@@ -203,7 +203,7 @@ public class Login extends javax.swing.JPanel {
         userList = frame.getUserList();
         isUsernameValid = false;
         for(int i = 0; i < userList.size(); i++){
-            if(userList.get(i).getUsername().equals(usernameFld.getText())){
+            if(userList.get(i).getUsername().equals(usernameFld.getText().toLowerCase())){
                 isUsernameValid = true;
                 userIndex = i;
             }
