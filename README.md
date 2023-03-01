@@ -1,1 +1,5 @@
 # CSSECDV_CaseStudy1
+
+As a software security expert, you and your team have been hired by SECURITY Svcs, a startup software security firm which would be specializing in developing and selling security solutions to various clients. They have recently been in contact with your Instructor, who has endorsed your team to take on this task. With your knowledge and understanding on security and how to implement secure applications, modify the program by implementing good security practices that you have observed are needed by the application. For this milestone, only focus on the ones which have been discussed during the class, you may however, add in more security functionalities as you see fit.
+
+The system of SECURITY Svcs is implemented using Java Programming language using the NetBeans IDE. As the team in-charge of implementing their security features, you have the option to use other IDE’s, however you may have to import the SQLite library again for you chosen IDE. After implementing your solution, try to run the program again in NetBeans IDE since Security Svcs would be using that IDE to continue their application.
