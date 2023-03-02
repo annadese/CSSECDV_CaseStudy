@@ -5,7 +5,9 @@ import Model.User;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.WindowConstants;
 
 public class Frame extends javax.swing.JFrame {
@@ -260,6 +262,8 @@ public class Frame extends javax.swing.JFrame {
     
     public void registerAction(String username, String password, String confpass){
         main.sqlite.addUser(username, password);
+        main.sqlite.addLogs("NOTICE", username, "User registration successful", new Timestamp(new Date().getTime()).toString());
+        System.out.println("NOTICE: " + username + " | User registration successful | " + new Timestamp(new Date().getTime()).toString());
     }
     
     // Returns the list of users for it to be accessed by files in View.
