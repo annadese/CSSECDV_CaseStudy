@@ -248,7 +248,7 @@ public class Frame extends javax.swing.JFrame {
         this.setVisible(true);
     }
     
-    public void mainNav(){
+    public void mainNav(String username){
         frameView.show(Container, "homePnl");
     }
     
@@ -262,8 +262,6 @@ public class Frame extends javax.swing.JFrame {
     
     public void registerAction(String username, String password, String confpass){
         main.sqlite.addUser(username, password);
-        main.sqlite.addLogs("NOTICE", username, "User registration successful", new Timestamp(new Date().getTime()).toString());
-        System.out.println("NOTICE: " + username + " | User registration successful | " + new Timestamp(new Date().getTime()).toString());
     }
     
     // Returns the list of users for it to be accessed by files in View.
@@ -274,6 +272,12 @@ public class Frame extends javax.swing.JFrame {
     // Returns the hashed password for it to be accessed by files in View.
     public String getHashPass(String origPass)throws Exception{
         return main.sqlite.getHash(origPass);
+    }
+    
+    // Creates a log and displays it in the console
+    public void createLog (String username, String desc) {
+        main.sqlite.addLogs("NOTICE", username.toLowerCase(), desc, new Timestamp(new Date().getTime()).toString());
+        System.out.println("NOTICE: " + username.toLowerCase() + " | " + desc + " | " + new Timestamp(new Date().getTime()).toString());
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -162,6 +162,7 @@ public class Register extends javax.swing.JPanel {
         
         if (isUsernameLenValid && isUsernameCharValid && isUsernameValid && isPassValValid && isPassLenValid && isConfPassValid){
             frame.registerAction(usernameFld.getText().toLowerCase(), passwordFld.getText(), confpassFld.getText());
+            frame.createLog(usernameFld.getText(), "User registration successful");
             frame.loginNav();
             resetRegPage();
         }

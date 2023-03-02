@@ -2,6 +2,7 @@
 package View;
 
 import Model.User;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.*;
 import java.util.logging.Level;
@@ -142,7 +143,8 @@ public class Login extends javax.swing.JPanel {
         
         // Checks for the validity of both username and password for the user to proceed to the main page
         if(isUsernameValid && isPassValid){
-            frame.mainNav();
+            frame.mainNav(usernameFld.getText());
+            frame.createLog(usernameFld.getText(), " User login successful");
             userAttempts = 0; // resets the number of attempts since the user already logged in successfully
             errorMaxAttempt.setEnabled(false);
             resetLogInPage();
@@ -178,6 +180,7 @@ public class Login extends javax.swing.JPanel {
             errorMaxAttempt.setEnabled(true);
             loginBtn.setEnabled(false);
             userAttempts = 0;
+            frame.createLog("Unknown user", "Multiple login attempts detected");
             
             // Timer class is used to disable the log in button for 5 minutes
             Timer timer = new Timer();
