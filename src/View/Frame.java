@@ -12,8 +12,6 @@ import javax.swing.WindowConstants;
 
 public class Frame extends javax.swing.JFrame {
 
-    int userRole;
-    
     public Frame() {
         initComponents();
     }
@@ -275,21 +273,30 @@ public class Frame extends javax.swing.JFrame {
         return main.sqlite.getUser(username);
     }
     
-    public void setRole(int role) {
-        userRole = role;
-    }
-    
-    public void initFrame() {
-        if(userRole == 2) {
-            adminBtn.setVisible(false);
-            staffBtn.setVisible(false);
-            managerBtn.setVisible(false);
-        }
-        
-        else if(userRole == 5) {
-            clientBtn.setVisible(false);
-            staffBtn.setVisible(false);
-            managerBtn.setVisible(false);
+    public void initFrame(int role) {
+        switch (role) {
+            case 2:
+                adminBtn.setVisible(false);
+                staffBtn.setVisible(false);
+                managerBtn.setVisible(false);
+                break;
+            case 3:
+                clientBtn.setVisible(false);
+                managerBtn.setVisible(false);
+                adminBtn.setVisible(false);
+                break;
+            case 4:
+                clientBtn.setVisible(false);
+                staffBtn.setVisible(false);
+                adminBtn.setVisible(false);
+                break;
+            case 5:
+                clientBtn.setVisible(false);
+                staffBtn.setVisible(false);
+                managerBtn.setVisible(false);
+                break;
+            default:
+                break;
         }
     }
 
@@ -307,12 +314,6 @@ public class Frame extends javax.swing.JFrame {
     // Increases the lock by 1 every time the user enters the wrong password
     public void increaseLock(String username){
         main.sqlite.updateLock(username);
-    }
-    
-    public void removeButton(String button) {
-        if(button.equals("admin")) {
-            adminBtn.setVisible(false);
-        }
     }
    
     // Variables declaration - do not modify//GEN-BEGIN:variables
