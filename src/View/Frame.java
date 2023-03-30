@@ -280,6 +280,11 @@ public class Frame extends javax.swing.JFrame {
         System.out.println("NOTICE: " + username.toLowerCase() + " | " + desc + " | " + new Timestamp(new Date().getTime()).toString());
     }
     
+    // Increases the lock by 1 every time the user enters the wrong password
+    public void increaseLock(String username){
+        main.sqlite.updateLock(username);
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Container;
     private javax.swing.JPanel Content;

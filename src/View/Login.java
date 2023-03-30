@@ -14,6 +14,7 @@ public class Login extends javax.swing.JPanel {
     
     private Boolean isUsernameValid = false;
     private Boolean isPassValid = false;
+    private Boolean isLocked = false;
     
     private int userAttempts = 0;
     private int userIndex = 0;
@@ -79,7 +80,7 @@ public class Login extends javax.swing.JPanel {
         errorMaxAttempt.setEditable(false);
         errorMaxAttempt.setForeground(new java.awt.Color(204, 0, 51));
         errorMaxAttempt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        errorMaxAttempt.setText("Reached maximum log in attempts. You cannot log in for 5 minutes.");
+        errorMaxAttempt.setText("User has reached maximum log in attempts. Please contact admin to re-activate account.");
         errorMaxAttempt.setAlignmentX(0.0F);
         errorMaxAttempt.setAlignmentY(0.0F);
         errorMaxAttempt.setBorder(null);
@@ -141,20 +142,28 @@ public class Login extends javax.swing.JPanel {
             isPassValid = false;
         }
         
-        // Checks for the validity of both username and password for the user to proceed to the main page
-        if(isUsernameValid && isPassValid){
-            frame.mainNav(usernameFld.getText());
-            frame.createLog(usernameFld.getText(), " User login successful");
-            userAttempts = 0; // resets the number of attempts since the user already logged in successfully
-            errorMaxAttempt.setEnabled(false);
-            resetLogInPage();
-        } else{
-            try {
+        checkLock();
+        
+        if(!isLocked){
+            // Checks for the validity of both username and password for the user to proceed to the main page
+            if(isUsernameValid && isPassValid){
+                frame.mainNav(usernameFld.getText());
+                frame.createLog(usernameFld.getText(), " User login successful");
+                //userAttempts = 0; // resets the number of attempts since the user already logged in successfully
+                errorMaxAttempt.setEnabled(false);
+                resetLogInPage();
+            } else{
                 errorMessage.setEnabled(true);
-                checkAttempts();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                /*try {
+                    errorMessage.setEnabled(true);
+                    checkAttempts();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }*/
             }
+        } else{
+            errorMaxAttempt.setEnabled(true);
+            isLocked = false;
         }
 
     }//GEN-LAST:event_loginBtnActionPerformed
@@ -169,10 +178,11 @@ public class Login extends javax.swing.JPanel {
         usernameFld.setText("");
         passwordFld.setText("");
         errorMessage.setEnabled(false);
+        errorMaxAttempt.setEnabled(false);
     }
 
     // Executes when user has an unsuccessful login and checks if user has reached max number of log in attempts
-    private void checkAttempts() throws InterruptedException{
+    /*private void checkAttempts() throws InterruptedException{
         userAttempts++;
         
         // Max number of log in attempts is 3
@@ -196,10 +206,8 @@ public class Login extends javax.swing.JPanel {
             // Schedules the timer
             timer.schedule(task, 300000, 300000);
             
-            /* for testing only
-            timer.schedule(task, 10000, 10000);*/
         }
-    }
+    }*/
     
     // Checks if username exists in the database
     private void checkUsername(){
@@ -220,9 +228,19 @@ public class Login extends javax.swing.JPanel {
             isPassValid = true;
         } else{
             isPassValid = false;
+            
+            // Increases the number of lock a user has
+            frame.increaseLock(userList.get(userIndex).getUsername());
         }
     }
 
+    // Checks if the user has maxed the number of login attempts
+    private void checkLock(){
+        if(userList.get(userIndex).getLocked() >= 3){
+            isLocked = true;
+        }
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField errorMaxAttempt;
     private javax.swing.JTextField errorMessage;
