@@ -149,6 +149,8 @@ public class Login extends javax.swing.JPanel {
             if(isUsernameValid && isPassValid){
                 frame.mainNav(usernameFld.getText());
                 frame.createLog(usernameFld.getText(), " User login successful");
+                frame.setRole(frame.getUser(usernameFld.getText()).getRole());
+                frame.initFrame();
                 //userAttempts = 0; // resets the number of attempts since the user already logged in successfully
                 errorMaxAttempt.setEnabled(false);
                 resetLogInPage();

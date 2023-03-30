@@ -12,6 +12,8 @@ import javax.swing.WindowConstants;
 
 public class Frame extends javax.swing.JFrame {
 
+    int userRole;
+    
     public Frame() {
         initComponents();
     }
@@ -268,6 +270,28 @@ public class Frame extends javax.swing.JFrame {
     public ArrayList<User> getUserList(){
         return main.sqlite.getUsers();
     }
+    
+    public User getUser(String username) {
+        return main.sqlite.getUser(username);
+    }
+    
+    public void setRole(int role) {
+        userRole = role;
+    }
+    
+    public void initFrame() {
+        if(userRole == 2) {
+            adminBtn.setVisible(false);
+            staffBtn.setVisible(false);
+            managerBtn.setVisible(false);
+        }
+        
+        else if(userRole == 5) {
+            clientBtn.setVisible(false);
+            staffBtn.setVisible(false);
+            managerBtn.setVisible(false);
+        }
+    }
 
     // Returns the hashed password for it to be accessed by files in View.
     public String getHashPass(String origPass)throws Exception{
@@ -285,6 +309,12 @@ public class Frame extends javax.swing.JFrame {
         main.sqlite.updateLock(username);
     }
     
+    public void removeButton(String button) {
+        if(button.equals("admin")) {
+            adminBtn.setVisible(false);
+        }
+    }
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Container;
     private javax.swing.JPanel Content;
