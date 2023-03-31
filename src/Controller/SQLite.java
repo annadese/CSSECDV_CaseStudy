@@ -363,8 +363,21 @@ public class SQLite {
     }
 
     // Lock is increased by 1 every time the user enters the wrong password
-    public void updateLock(String username){
+    public void increaseLock(String username){
         String sql = "UPDATE users SET locked=locked+1 WHERE username='" + username +"'";
+                   
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()){
+            stmt.execute(sql);
+            
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+    }
+    
+    // Resets the lock of user once he successfully logs in
+    public void resetLock(String username){
+        String sql = "UPDATE users SET locked=0 WHERE username='" + username +"'";
                    
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()){

@@ -342,7 +342,12 @@ public class Frame extends javax.swing.JFrame {
     
     // Increases the lock by 1 every time the user enters the wrong password
     public void increaseLock(String username){
-        main.sqlite.updateLock(username);
+        main.sqlite.increaseLock(username);
+    }
+    
+    // Resets the lock of user once he successfully logs in
+    public void resetLock(String username){
+        main.sqlite.resetLock(username);
     }
    
     // Variables declaration - do not modify//GEN-BEGIN:variables

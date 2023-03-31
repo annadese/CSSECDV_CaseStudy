@@ -154,9 +154,11 @@ public class Login extends javax.swing.JPanel {
                 System.out.println("USERROLE: " + frame.getUser(usernameFld.getText()).getRole());
                 //userAttempts = 0; // resets the number of attempts since the user already logged in successfully
                 errorMaxAttempt.setEnabled(false);
+                frame.resetLock(userList.get(userIndex).getUsername()); // resets the lock of the user since he successfully logged in
                 resetLogInPage();
             } else{
                 errorMessage.setEnabled(true);
+                errorMaxAttempt.setEnabled(false);
                 /*try {
                     errorMessage.setEnabled(true);
                     checkAttempts();
