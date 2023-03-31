@@ -12,6 +12,8 @@ import javax.swing.WindowConstants;
 
 public class Frame extends javax.swing.JFrame {
 
+    int userRole;
+    
     public Frame() {
         initComponents();
     }
@@ -205,12 +207,12 @@ public class Frame extends javax.swing.JFrame {
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
         frameView.show(Container, "loginPnl");
+        resetButtons();
     }//GEN-LAST:event_logoutBtnActionPerformed
 
     public Main main;
     public Login loginPnl = new Login();
     public Register registerPnl = new Register();
-    
     private AdminHome adminHomePnl = new AdminHome();
     private ManagerHome managerHomePnl = new ManagerHome();
     private StaffHome staffHomePnl = new StaffHome();
@@ -273,31 +275,58 @@ public class Frame extends javax.swing.JFrame {
         return main.sqlite.getUser(username);
     }
     
-    public void initFrame(int role) {
-        switch (role) {
-            case 2:
-                adminBtn.setVisible(false);
+    public void setRole(int role) {
+        this.userRole = role;
+    }
+    
+    public void initFrame() {
+        switch (userRole) {
+            case 2: // Client
                 staffBtn.setVisible(false);
                 managerBtn.setVisible(false);
+                adminBtn.setVisible(false);
+                
+                adminHomePnl.setVisible(false);
+                managerHomePnl.setVisible(false);
+                staffHomePnl.setVisible(false);
                 break;
-            case 3:
+            case 3: // Staff
                 clientBtn.setVisible(false);
                 managerBtn.setVisible(false);
                 adminBtn.setVisible(false);
+                
+                adminHomePnl.setVisible(false);
+                managerHomePnl.setVisible(false);
+                clientHomePnl.setVisible(false);
                 break;
-            case 4:
+            case 4: // Manager
                 clientBtn.setVisible(false);
                 staffBtn.setVisible(false);
                 adminBtn.setVisible(false);
+                
+                adminHomePnl.setVisible(false);
+                staffHomePnl.setVisible(false);
+                clientHomePnl.setVisible(false);
                 break;
-            case 5:
+            case 5: // Admin
                 clientBtn.setVisible(false);
                 staffBtn.setVisible(false);
                 managerBtn.setVisible(false);
+                
+                staffHomePnl.setVisible(false);
+                managerHomePnl.setVisible(false);
+                clientHomePnl.setVisible(false);
                 break;
             default:
                 break;
         }
+    }
+    
+    public void resetButtons() {
+        clientBtn.setVisible(true);
+        adminBtn.setVisible(true);
+        staffBtn.setVisible(true);
+        managerBtn.setVisible(true);
     }
 
     // Returns the hashed password for it to be accessed by files in View.

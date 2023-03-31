@@ -45,16 +45,17 @@ public class AdminHome extends javax.swing.JPanel {
         Content.add(this.mgmtProduct, "mgmtProduct");
         Content.add(this.mgmtLogs, "mgmtLogs");
         
-//        UNCOMMENT TO DISABLE BUTTONS
-//        historyBtn.setVisible(false);
-//        usersBtn.setVisible(false);
-//        productsBtn.setVisible(false);
-//        logsBtn.setVisible(false);
+        // Admin manages users and logs
+        usersBtn.setVisible(true);
+        logsBtn.setVisible(true);
+        historyBtn.setVisible(false);
+        productsBtn.setVisible(false);
     }
     
     public void showPnl(String panelName){
         contentView.show(Content, panelName);
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.

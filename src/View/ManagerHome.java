@@ -45,11 +45,11 @@ public class ManagerHome extends javax.swing.JPanel {
         Content.add(mgmtProduct, "mgmtProduct");
         Content.add(mgmtLogs, "mgmtLogs");
         
-//        UNCOMMENT TO DISABLE BUTTONS
-//        historyBtn.setVisible(false);
-//        usersBtn.setVisible(false);
-//        productsBtn.setVisible(false);
-//        logsBtn.setVisible(false);
+        // Manager is able to Add, Edit, and Delete Products as well as View the Purchase History of all users
+        historyBtn.setVisible(true);
+        productsBtn.setVisible(true);
+        usersBtn.setVisible(false);
+        logsBtn.setVisible(false);
     }
     
     public void showPnl(String panelName){

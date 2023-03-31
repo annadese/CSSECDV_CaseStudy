@@ -45,11 +45,11 @@ public class ClientHome extends javax.swing.JPanel {
         Content.add(mgmtProduct, "mgmtProduct");
         Content.add(mgmtLogs, "mgmtLogs");
         
-//        UNCOMMENT TO DISABLE BUTTONS
-//        historyBtn.setVisible(false);
-//        usersBtn.setVisible(false);
-//        productsBtn.setVisible(false);
-//        logsBtn.setVisible(false);
+        // Clients areonly able to purchase products and view his/her own purchase history
+        historyBtn.setVisible(true);
+        productsBtn.setVisible(true);
+        usersBtn.setVisible(false);
+        logsBtn.setVisible(false);
     }
     
     public void showPnl(String panelName){

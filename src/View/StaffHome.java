@@ -45,11 +45,11 @@ public class StaffHome extends javax.swing.JPanel {
         Content.add(mgmtProduct, "mgmtProduct");
         Content.add(mgmtLogs, "mgmtLogs");
         
-//        UNCOMMENT TO DISABLE BUTTONS
-//        historyBtn.setVisible(false);
-//        usersBtn.setVisible(false);
-//        productsBtn.setVisible(false);
-//        logsBtn.setVisible(false);
+        // Staff manages products of the organization. This user is able to Add, Edit, and Delete Products
+        productsBtn.setVisible(true);
+        historyBtn.setVisible(false);
+        usersBtn.setVisible(false);
+        logsBtn.setVisible(false);
     }
     
     public void showPnl(String panelName){
