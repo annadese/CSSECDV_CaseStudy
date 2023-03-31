@@ -286,36 +286,32 @@ public class Frame extends javax.swing.JFrame {
                 managerBtn.setVisible(false);
                 adminBtn.setVisible(false);
                 
-                adminHomePnl.setVisible(false);
-                managerHomePnl.setVisible(false);
-                staffHomePnl.setVisible(false);
+                clientHomePnl.showPnl("home");
+                contentView.show(Content, "clientHomePnl");
                 break;
             case 3: // Staff
                 clientBtn.setVisible(false);
                 managerBtn.setVisible(false);
                 adminBtn.setVisible(false);
                 
-                adminHomePnl.setVisible(false);
-                managerHomePnl.setVisible(false);
-                clientHomePnl.setVisible(false);
+                staffHomePnl.showPnl("home");
+                contentView.show(Content, "staffHomePnl");
                 break;
             case 4: // Manager
                 clientBtn.setVisible(false);
                 staffBtn.setVisible(false);
                 adminBtn.setVisible(false);
                 
-                adminHomePnl.setVisible(false);
-                staffHomePnl.setVisible(false);
-                clientHomePnl.setVisible(false);
+                managerHomePnl.showPnl("home");
+                contentView.show(Content, "managerHomePnl");
                 break;
             case 5: // Admin
                 clientBtn.setVisible(false);
                 staffBtn.setVisible(false);
                 managerBtn.setVisible(false);
                 
-                staffHomePnl.setVisible(false);
-                managerHomePnl.setVisible(false);
-                clientHomePnl.setVisible(false);
+                adminHomePnl.showPnl("home");
+                contentView.show(Content, "adminHomePnl");
                 break;
             default:
                 break;
