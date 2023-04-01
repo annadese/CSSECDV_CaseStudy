@@ -322,7 +322,6 @@ public class SQLite {
             e.printStackTrace();
         }
         
-        
         String sql = "INSERT INTO users(username,password,role) VALUES('" + username + "','" + hashedPass + "','" + role + "')";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -336,6 +335,26 @@ public class SQLite {
     
     public void editRole(User user, int role) {
         String sql = "UPDATE users SET role = " + role + " WHERE username='" + user.getUsername() +"';";
+                   
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()){
+            stmt.execute(sql);
+            
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+    }
+    
+    public void changePassword(User user, String password) {
+        String hashedPass = null;
+        
+        try {
+            hashedPass = getHash(password);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        String sql = "UPDATE users SET password = '" + hashedPass + "' WHERE username='" + user.getUsername() +"';";
                    
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()){

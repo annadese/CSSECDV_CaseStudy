@@ -8,6 +8,7 @@ package View;
 import Controller.SQLite;
 import Model.User;
 import java.util.ArrayList;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -188,12 +189,12 @@ public class MgmtUser extends javax.swing.JPanel {
             String result = (String) JOptionPane.showInputDialog(null, "USER: " + tableModel.getValueAt(table.getSelectedRow(), 0), 
                 "EDIT USER ROLE", JOptionPane.QUESTION_MESSAGE, null, options, options[(int)tableModel.getValueAt(table.getSelectedRow(), 2) - 1]);
             
+            User user = sqlite.getUser((String)tableModel.getValueAt(table.getSelectedRow(), 0));
+            
             if(result != null){
-                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                System.out.println(user.getUsername());
                 System.out.println(result.charAt(0));
-                sqlite.editRole(sqlite.getUser((String)tableModel.getValueAt(table.getSelectedRow(), 0)), Character.getNumericValue(result.charAt(0)));
-                sqlite.getUser((String)tableModel.getValueAt(table.getSelectedRow(), 0)).setRole(result.charAt(0));
-                
+                sqlite.editRole(user, Character.getNumericValue(result.charAt(0)));    
             }
         }
     }//GEN-LAST:event_editRoleBtnActionPerformed
@@ -202,9 +203,11 @@ public class MgmtUser extends javax.swing.JPanel {
         if(table.getSelectedRow() >= 0){
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
             
+            User user = sqlite.getUser((String)tableModel.getValueAt(table.getSelectedRow(), 0));
+            
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
-                sqlite.removeUser(sqlite.getUser((String)tableModel.getValueAt(table.getSelectedRow(), 0)));
+                sqlite.removeUser(user);
                 this.repaint();
             }
         }
@@ -235,14 +238,23 @@ public class MgmtUser extends javax.swing.JPanel {
             Object[] message = {
                 "Enter New Password:", password, confpass
             };
-
-            int result = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
             
-            if (result == JOptionPane.OK_OPTION) {
+            User user = sqlite.getUser((String)tableModel.getValueAt(table.getSelectedRow(), 0));
+            
+            int result = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+             
+            if (result == JOptionPane.OK_OPTION && password.getText().equals(confpass.getText())) {
                 System.out.println(password.getText());
                 System.out.println(confpass.getText());
+                
+                sqlite.changePassword(user, (String)password.getText());
+                System.out.println(user.getUsername()); 
+                System.out.println(user.getPassword()); 
+            } else {
+                JOptionPane.showMessageDialog(null, "Passwords do not match.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
             }
         }
+        
     }//GEN-LAST:event_chgpassBtnActionPerformed
 
 
