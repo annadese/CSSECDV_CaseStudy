@@ -194,7 +194,8 @@ public class MgmtUser extends javax.swing.JPanel {
             if(result != null){
                 System.out.println(user.getUsername());
                 System.out.println(result.charAt(0));
-                sqlite.editRole(user, Character.getNumericValue(result.charAt(0)));    
+                sqlite.editRole(user, Character.getNumericValue(result.charAt(0)));
+                this.init();
             }
         }
     }//GEN-LAST:event_editRoleBtnActionPerformed
@@ -208,7 +209,7 @@ public class MgmtUser extends javax.swing.JPanel {
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 sqlite.removeUser(user);
-                this.repaint();
+                this.init();
             }
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
@@ -250,11 +251,11 @@ public class MgmtUser extends javax.swing.JPanel {
                 sqlite.changePassword(user, (String)password.getText());
                 System.out.println(user.getUsername()); 
                 System.out.println(user.getPassword()); 
+                this.init();
             } else {
                 JOptionPane.showMessageDialog(null, "Passwords do not match.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
             }
         }
-        
     }//GEN-LAST:event_chgpassBtnActionPerformed
 
 
