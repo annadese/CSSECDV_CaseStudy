@@ -202,6 +202,8 @@ public class MgmtUser extends javax.swing.JPanel {
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 sqlite.removeUser((String)tableModel.getValueAt(table.getSelectedRow(), 0));
+                this.revalidate();
+                this.repaint();
             }
         }
     }//GEN-LAST:event_deleteBtnActionPerformed

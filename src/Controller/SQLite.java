@@ -189,16 +189,16 @@ public class SQLite {
         }
     }
     
-    public void addUser(String username, String password) {
+    public void addUser(User user) {
         String hashedPass = null;
         
         try {
-            hashedPass = getHash(password);
+            hashedPass = getHash(user.getPassword());
         } catch(Exception e) {
             e.printStackTrace();
         }
         
-        String sql = "INSERT INTO users(username,password) VALUES('" + username + "','" + hashedPass + "')";
+        String sql = "INSERT INTO users(username,password) VALUES('" + user.getUsername() + "','" + hashedPass + "')";
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()){
             stmt.execute(sql);

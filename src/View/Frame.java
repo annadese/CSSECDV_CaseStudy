@@ -263,7 +263,7 @@ public class Frame extends javax.swing.JFrame {
     }
     
     public void registerAction(String username, String password, String confpass){
-        main.sqlite.addUser(username, password);
+        main.sqlite.addUser(new User(username, password));
     }
     
     // Returns the list of users for it to be accessed by files in View.
