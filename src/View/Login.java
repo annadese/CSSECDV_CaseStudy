@@ -130,7 +130,6 @@ public class Login extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
         checkUsername();
-        
         // If username is valid, then it will check if the password is correct
         if(isUsernameValid){
             try {
@@ -151,7 +150,7 @@ public class Login extends javax.swing.JPanel {
                 frame.createLog(usernameFld.getText(), " User login successful");
                 frame.setRole(frame.getUser(usernameFld.getText()).getRole());
                 frame.initFrame();
-                System.out.println("USERROLE: " + frame.getUser(usernameFld.getText()).getRole());
+                
                 //userAttempts = 0; // resets the number of attempts since the user already logged in successfully
                 errorMaxAttempt.setEnabled(false);
                 frame.resetLock(userList.get(userIndex).getUsername()); // resets the lock of the user since he successfully logged in

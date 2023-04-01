@@ -187,7 +187,7 @@ public class SQLite {
         } catch (Exception ex) {
             System.out.print(ex);
         }
-    }    
+    } 
     
     public ArrayList<History> getHistory(){
         String sql = "SELECT id, username, name, stock, timestamp FROM history";
@@ -288,28 +288,6 @@ public class SQLite {
         return user;
     }
     
-        
-    public void addUser(String username, String password, int role) {
-        String hashedPass = null;
-        
-        try {
-            hashedPass = getHash(username);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        
-        
-        String sql = "INSERT INTO users(username,password,role) VALUES('" + username + "','" + hashedPass + "','" + role + "')";
-        
-        try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
-            
-        } catch (Exception ex) {
-            System.out.print(ex);
-        }
-    }
-    
         public void addUser(User user) {
         String hashedPass = null;
         
@@ -334,11 +312,39 @@ public class SQLite {
             System.out.print(ex);
         }
     }
-
-    public void editRole(User user, int role) {
+    
+    public void addUser(String username, String password, int role) {
+        String hashedPass = null;
         
+        try {
+            hashedPass = getHash(password);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        
+        String sql = "INSERT INTO users(username,password,role) VALUES('" + username + "','" + hashedPass + "','" + role + "')";
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()){
+            stmt.execute(sql);
+            
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
     }
     
+    public void editRole(User user, int role) {
+        String sql = "UPDATE users SET role = " + role + " WHERE username='" + user.getUsername() +"';";
+                   
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()){
+            stmt.execute(sql);
+            
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+    }
     
     public void removeUser(User user) {
         String sql = "DELETE FROM users WHERE username='" + user.getUsername() + "';";
@@ -369,7 +375,7 @@ public class SQLite {
 
     // Lock is increased by 1 every time the user enters the wrong password
     public void increaseLock(String username){
-        String sql = "UPDATE users SET locked=locked+1 WHERE username='" + username +"'";
+        String sql = "UPDATE users SET locked=locked+1 WHERE username='" + username +"';";
                    
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()){
@@ -382,7 +388,7 @@ public class SQLite {
     
     // Resets the lock of user once he successfully logs in
     public void resetLock(String username){
-        String sql = "UPDATE users SET locked=0 WHERE username='" + username +"'";
+        String sql = "UPDATE users SET locked=0 WHERE username='" + username +"';";
                    
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()){
