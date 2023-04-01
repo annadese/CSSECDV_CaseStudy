@@ -187,33 +187,7 @@ public class SQLite {
         } catch (Exception ex) {
             System.out.print(ex);
         }
-    }
-    
-    public void addUser(User user) {
-        String hashedPass = null;
-        
-        try {
-            hashedPass = getHash(user.getPassword());
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        
-        String sql = "INSERT INTO users(username,password) VALUES('" + user.getUsername() + "','" + hashedPass + "')";
-        try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
-            
-//      PREPARED STATEMENT EXAMPLE
-//      String sql = "INSERT INTO users(username,password) VALUES(?,?)";
-//      PreparedStatement pstmt = conn.prepareStatement(sql)) {
-//      pstmt.setString(1, username);
-//      pstmt.setString(2, password);
-//      pstmt.executeUpdate();
-        } catch (Exception ex) {
-            System.out.print(ex);
-        }
-    }
-    
+    }    
     
     public ArrayList<History> getHistory(){
         String sql = "SELECT id, username, name, stock, timestamp FROM history";
@@ -314,11 +288,12 @@ public class SQLite {
         return user;
     }
     
+        
     public void addUser(String username, String password, int role) {
         String hashedPass = null;
         
         try {
-            hashedPass = getHash(password);
+            hashedPass = getHash(username);
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -335,13 +310,43 @@ public class SQLite {
         }
     }
     
-    public void removeUser(String username) {
-        String sql = "DELETE FROM users WHERE username='" + username + "';";
+        public void addUser(User user) {
+        String hashedPass = null;
+        
+        try {
+            hashedPass = getHash(user.getPassword());
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        String sql = "INSERT INTO users(username,password) VALUES('" + user.getUsername() + "','" + hashedPass + "')";
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()){
+            stmt.execute(sql);
+            
+//      PREPARED STATEMENT EXAMPLE
+//      String sql = "INSERT INTO users(username,password) VALUES(?,?)";
+//      PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//      pstmt.setString(1, username);
+//      pstmt.setString(2, password);
+//      pstmt.executeUpdate();
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+    }
+
+    public void editRole(User user, int role) {
+        
+    }
+    
+    
+    public void removeUser(User user) {
+        String sql = "DELETE FROM users WHERE username='" + user.getUsername() + "';";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("User " + username + " has been deleted.");
+            System.out.println("User " + user.getUsername() + " has been deleted.");
         } catch (Exception ex) {
             System.out.print(ex);
         }
