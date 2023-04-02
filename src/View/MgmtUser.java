@@ -318,7 +318,7 @@ public class MgmtUser extends javax.swing.JPanel {
         }
         
         // Checks if the password does not contain <, >, or ,
-        Pattern patternSymbol = Pattern.compile("^[^<> ,]+$");
+        Pattern patternSymbol = Pattern.compile("^[^<>'\"]+$");
         Matcher matcherSymbol = patternSymbol.matcher(password);
         boolean containsSymbol = matcherSymbol.find();
         
@@ -339,7 +339,7 @@ public class MgmtUser extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Password must be a combination of letters, numbers, and special characters.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
             isPassValid = false;
         } else if(isPassValSymbol == false){
-            JOptionPane.showMessageDialog(null, "Password cannot contain symbols '<', '>', or , ','.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Password cannot contain symbols <, >, ', or \".", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
             isPassValid = false;
         } else{
             isPassValid = true;
