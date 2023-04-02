@@ -7,7 +7,9 @@ package View;
 
 import Controller.SQLite;
 import Model.Product;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -208,6 +210,7 @@ public class MgmtProduct extends javax.swing.JPanel {
             if (result == JOptionPane.OK_OPTION) {
                 System.out.println(stockFld.getText());
                 sqlite.editProduct(prod, prod.getName(), prod.getStock() - Integer.parseInt(stockFld.getText()), prod.getPrice());
+                sqlite.addHistory("user", prod.getName(), Integer.parseInt(stockFld.getText()), new Timestamp(new Date().getTime()).toString());
                 this.init();
             }
         }
