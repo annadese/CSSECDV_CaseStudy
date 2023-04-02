@@ -28,6 +28,7 @@ public class MgmtProduct extends javax.swing.JPanel {
     String username;
     int userRole;
     private boolean isProductValValid = false;
+    private boolean isAvailable = false;
     private int cntSimilarProd = 0;
     
     public MgmtProduct(SQLite sqlite, int role, String username) {
@@ -213,10 +214,15 @@ public class MgmtProduct extends javax.swing.JPanel {
             Product prod = sqlite.getProduct((String)tableModel.getValueAt(table.getSelectedRow(), 0));
             
             if (result == JOptionPane.OK_OPTION) {
+                checkStock((String)tableModel.getValueAt(table.getSelectedRow(), 0), prod.getStock(), Integer.parseInt(stockFld.getText()));
                 System.out.println(stockFld.getText());
-                sqlite.editProduct(prod, prod.getName(), prod.getStock() - Integer.parseInt(stockFld.getText()), prod.getPrice());
-                sqlite.addHistory(this.username, prod.getName(), Integer.parseInt(stockFld.getText()), new Timestamp(new Date().getTime()).toString());
-                this.init();
+                
+                if(isAvailable) {
+                    sqlite.editProduct(prod, prod.getName(), prod.getStock() - Integer.parseInt(stockFld.getText()), prod.getPrice());
+                    sqlite.addHistory(this.username, prod.getName(), Integer.parseInt(stockFld.getText()), new Timestamp(new Date().getTime()).toString());
+                    this.init();
+                }
+
             }
         }
     }//GEN-LAST:event_purchaseBtnActionPerformed
@@ -293,6 +299,21 @@ public class MgmtProduct extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_editBtnActionPerformed
 
+    private void checkStock(String pName, int pStock, int uStock) {
+        if(pStock == 0) {
+            isAvailable = false;
+            JOptionPane.showMessageDialog(null, "Out of stock.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);      
+        } else if (uStock > pStock) {
+            isAvailable = false;
+            JOptionPane.showMessageDialog(null, "The quantity requested exceeds the available amount. Please input a lower quantity.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
+        } else if(uStock <= 0) {
+            isAvailable = false;
+            JOptionPane.showMessageDialog(null, "Invalid input. Please enter a value greater than 0.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
+        } else {
+            isAvailable = true;
+        }
+    }
+    
     private void checkProduct(String pName, String pStock, String pPrice){
         
         boolean isNameValid = false;
