@@ -10,8 +10,9 @@ public class Register extends javax.swing.JPanel {
 
     public Frame frame;
     private boolean isUsernameLenValid = false;
-    private boolean  isUsernameCharValid = false;
+    private boolean isUsernameCharValid = false;
     private boolean isUsernameValid = false;
+    private boolean isUsernameSymbolValid = false;
     private boolean isPassValValid = false;
     private boolean isPassLenValid = false;
     private boolean isConfPassValid = false;
@@ -161,7 +162,7 @@ public class Register extends javax.swing.JPanel {
         checkPassword();
         checkConfirmPassword();
         
-        if (isUsernameLenValid && isUsernameCharValid && isUsernameValid && isPassValValid && isPassLenValid && isPassSymbolValid && isConfPassValid){
+        if (isUsernameLenValid && isUsernameCharValid && isUsernameSymbolValid && isUsernameValid && isPassValValid && isPassLenValid && isPassSymbolValid && isConfPassValid){
             frame.registerAction(usernameFld.getText().toLowerCase(), passwordFld.getText(), confpassFld.getText());
             frame.createLog(usernameFld.getText(), "User registration successful");
             frame.loginNav();
@@ -201,6 +202,17 @@ public class Register extends javax.swing.JPanel {
             isUsernameCharValid = true;
         }
         
+        // Checks if the user does not contain <, >, ', or "
+        Pattern patternSymbol = Pattern.compile("^[^<>'\"]+$");
+        Matcher matcherSymbol = patternSymbol.matcher(usernameFld.getText());
+        boolean containsSymbol = matcherSymbol.find();
+        
+        if(containsSymbol){
+            isUsernameSymbolValid = true;
+        } else{
+            isUsernameSymbolValid = false;
+        }
+        
         // Checks if username already exists in the database
         ArrayList<User> userList = frame.getUserList();
         isUsernameValid = true;
@@ -232,6 +244,9 @@ public class Register extends javax.swing.JPanel {
         } else if(isUsernameLenValid == true && isUsernameCharValid == true && isUsernameValid == false){
             errorUsername.setEnabled(true);
             errorUsername.setText("Username already exists.");
+        } else if(isUsernameSymbolValid == false){
+            errorUsername.setEnabled(true);
+            errorUsername.setText("Username cannot contain symbols <, >, ', or \".");
         } else{
             errorUsername.setEnabled(false);
         }

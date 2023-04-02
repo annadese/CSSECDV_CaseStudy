@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Login extends javax.swing.JPanel {
 
@@ -129,46 +131,43 @@ public class Login extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
-        checkUsername();
-        // If username is valid, then it will check if the password is correct
-        if(isUsernameValid){
-            try {
-                checkPassword();
-            } catch (Exception ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else{
-            isPassValid = false;
-        }
-        
-        checkLock();
-        
-        if(!isLocked){
-            // Checks for the validity of both username and password for the user to proceed to the main page
-            if(isUsernameValid && isPassValid){
-                frame.mainNav(usernameFld.getText().toLowerCase());
-                frame.createLog(usernameFld.getText(), " User login successful");
-                frame.setUser(usernameFld.getText());
-                frame.setRole(frame.getUser(usernameFld.getText()).getRole());
-                frame.initFrame();
-                
-                //userAttempts = 0; // resets the number of attempts since the user already logged in successfully
-                errorMaxAttempt.setEnabled(false);
-                frame.resetLock(userList.get(userIndex).getUsername()); // resets the lock of the user since he successfully logged in
-                resetLogInPage();
-            } else{
-                errorMessage.setEnabled(true);
-                errorMaxAttempt.setEnabled(false);
-                /*try {
-                    errorMessage.setEnabled(true);
-                    checkAttempts();
-                } catch (InterruptedException ex) {
+        if(checkInput()){
+            checkUsername();
+            // If username is valid, then it will check if the password is correct
+            if(isUsernameValid){
+                try {
+                    checkPassword();
+                } catch (Exception ex) {
                     Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                }*/
+                }
+            } else{
+                isPassValid = false;
+            }
+
+            checkLock();
+
+            if(!isLocked){
+                // Checks for the validity of both username and password for the user to proceed to the main page
+                if(isUsernameValid && isPassValid){
+                    frame.mainNav(usernameFld.getText().toLowerCase());
+                    frame.createLog(usernameFld.getText(), " User login successful");
+                    frame.setUser(usernameFld.getText());
+                    frame.setRole(frame.getUser(usernameFld.getText()).getRole());
+                    frame.initFrame();
+
+                    errorMaxAttempt.setEnabled(false);
+                    frame.resetLock(userList.get(userIndex).getUsername()); // resets the lock of the user since he successfully logged in
+                    resetLogInPage();
+                } else{
+                    errorMessage.setEnabled(true);
+                    errorMaxAttempt.setEnabled(false);
+                }
+            } else{
+                errorMaxAttempt.setEnabled(true);
+                isLocked = false;
             }
         } else{
-            errorMaxAttempt.setEnabled(true);
-            isLocked = false;
+            errorMessage.setEnabled(true);
         }
 
     }//GEN-LAST:event_loginBtnActionPerformed
@@ -185,35 +184,29 @@ public class Login extends javax.swing.JPanel {
         errorMessage.setEnabled(false);
         errorMaxAttempt.setEnabled(false);
     }
-
-    // Executes when user has an unsuccessful login and checks if user has reached max number of log in attempts
-    /*private void checkAttempts() throws InterruptedException{
-        userAttempts++;
-        
-        // Max number of log in attempts is 3
-        if(userAttempts == 3){
-            errorMaxAttempt.setEnabled(true);
-            loginBtn.setEnabled(false);
-            userAttempts = 0;
-            frame.createLog("Unknown user", "Multiple login attempts detected");
-            
-            // Timer class is used to disable the log in button for 5 minutes
-            Timer timer = new Timer();
-            TimerTask task = new TimerTask() {
-                @Override
-                public void run() {
-                   loginBtn.setEnabled(true);
-                   errorMaxAttempt.setEnabled(false);
-                   timer.cancel();
-                }
-            };
-            
-            // Schedules the timer
-            timer.schedule(task, 300000, 300000);
-            
-        }
-    }*/
     
+    private boolean checkInput(){
+        boolean isInputValid = false;
+        
+    // Checks if the username input does not contain <, >, ', or "
+        Pattern patternUsernameSymbol = Pattern.compile("^[^<>'\"]+$");
+        Matcher matcherUsernameSymbol = patternUsernameSymbol.matcher(usernameFld.getText());
+        boolean containsUsernameSymbol = matcherUsernameSymbol.find();
+        
+    // Checks if the password input does not contain <, >, ', or "
+        Pattern patternPassSymbol = Pattern.compile("^[^<>'\"]+$");
+        Matcher matcherPassSymbol = patternPassSymbol.matcher(passwordFld.getText());
+        boolean containsPassSymbol = matcherPassSymbol.find();
+        
+        if(containsUsernameSymbol && containsPassSymbol){
+            isInputValid = true;
+        } else{
+            isInputValid = false;
+        }
+        
+        return isInputValid;
+    }
+
     // Checks if username exists in the database
     private void checkUsername(){
         userList = frame.getUserList();
