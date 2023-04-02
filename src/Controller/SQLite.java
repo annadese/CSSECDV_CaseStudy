@@ -394,6 +394,18 @@ public class SQLite {
         }
     }
     
+    public void clearLogs() {
+        String sql = "DELETE FROM logs;";
+
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("Logs have been cleared.");
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+    }
+    
     public void deleteProduct(Product prod) {
         String sql = "DELETE FROM product WHERE name='" + prod.getName() + "';";
 
