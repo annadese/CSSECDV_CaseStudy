@@ -9,6 +9,8 @@ import Controller.SQLite;
 import Model.History;
 import Model.Product;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -187,7 +189,7 @@ public class MgmtHistory extends javax.swing.JPanel {
 
         int result = JOptionPane.showConfirmDialog(null, message, "SEARCH HISTORY", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
-        if (result == JOptionPane.OK_OPTION) {
+        if (result == JOptionPane.OK_OPTION && checkSearchInput(searchFld.getText())) {
 //          CLEAR TABLE
             for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
                 tableModel.removeRow(0);
@@ -215,6 +217,17 @@ public class MgmtHistory extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_searchBtnActionPerformed
 
+    // Checks if input of user does not contain <, > , ', or "
+    private boolean checkSearchInput(String input){
+        
+        Pattern patternSymbol = Pattern.compile("^[^<>'\"]+$");
+        Matcher matcherSymbol = patternSymbol.matcher(input);
+        boolean containsSymbol = matcherSymbol.find();
+        
+        System.out.println("went through " + containsSymbol);
+        return containsSymbol;
+    }
+    
     private void reloadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reloadBtnActionPerformed
         init();
     }//GEN-LAST:event_reloadBtnActionPerformed

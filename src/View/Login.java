@@ -193,7 +193,7 @@ public class Login extends javax.swing.JPanel {
         Matcher matcherUsernameSymbol = patternUsernameSymbol.matcher(usernameFld.getText());
         boolean containsUsernameSymbol = matcherUsernameSymbol.find();
         
-    // Checks if the password input does not contain <, >, ', or "
+        // Checks if the password input does not contain <, >, ', or "
         Pattern patternPassSymbol = Pattern.compile("^[^<>'\"]+$");
         Matcher matcherPassSymbol = patternPassSymbol.matcher(passwordFld.getText());
         boolean containsPassSymbol = matcherPassSymbol.find();
