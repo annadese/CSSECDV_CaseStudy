@@ -394,6 +394,18 @@ public class SQLite {
         }
     }
     
+    public void deleteProduct(Product prod) {
+        String sql = "DELETE FROM product WHERE name='" + prod.getName() + "';";
+
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("Product " + prod.getName() + " has been deleted.");
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+    }
+    
     public void removeUser(User user) {
         String sql = "DELETE FROM users WHERE username='" + user.getUsername() + "';";
 

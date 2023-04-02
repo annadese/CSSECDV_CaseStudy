@@ -267,6 +267,8 @@ public class MgmtProduct extends javax.swing.JPanel {
             
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                sqlite.deleteProduct(sqlite.getProduct((String)tableModel.getValueAt(table.getSelectedRow(), 0)));
+                this.init();
             }
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
