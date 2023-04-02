@@ -48,7 +48,6 @@ public class MgmtProduct extends javax.swing.JPanel {
                 products.get(nCtr).getPrice()});
         }
         
-        System.out.println(userRole);
         //      Set buttons
         switch(userRole) {
             case 2:   // Client
