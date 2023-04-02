@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList; 
 import java.security.MessageDigest;
+import java.sql.PreparedStatement;
 
 public class SQLite {
     
@@ -189,6 +190,45 @@ public class SQLite {
         }
     } 
     
+    // Adds user with default role 2
+    public void addUser(User user) {
+        String hashedPass = null;
+        
+        try {
+            hashedPass = getHash(user.getPassword());
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        String sql = "INSERT INTO users(username,password) VALUES('" + user.getUsername() + "','" + hashedPass + "')";
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()){
+            stmt.execute(sql);
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+    }
+    
+    public void addUser(String username, String password, int role) {
+        String hashedPass = null;
+        
+        try {
+            hashedPass = getHash(password);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        String sql = "INSERT INTO users(username,password,role) VALUES('" + username + "','" + hashedPass + "','" + role + "')";
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()){
+            stmt.execute(sql);
+            
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+    }
+    
     public ArrayList<History> getHistory(){
         String sql = "SELECT id, username, name, stock, timestamp FROM history";
         ArrayList<History> histories = new ArrayList<History>();
@@ -270,6 +310,21 @@ public class SQLite {
         return users;
     }
     
+    public Product getProduct(String name){
+        String sql = "SELECT name, stock, price FROM product WHERE name='" + name + "';";
+        Product product = null;
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)){
+            product = new Product(rs.getString("name"),
+                                   rs.getInt("stock"),
+                                   rs.getFloat("price"));
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+        return product;
+    }
+    
     public User getUser(String username){
         String sql = "SELECT * FROM users WHERE username ='" + username.toLowerCase() + "';";
         User user = null;
@@ -288,44 +343,18 @@ public class SQLite {
         return user;
     }
     
-        public void addUser(User user) {
-        String hashedPass = null;
+    public void editProduct(Product prod, String name, int stock, double price) {
+        String sql = "UPDATE product SET name = ?, stock = ?, price = ? WHERE name = ?;";
         
-        try {
-            hashedPass = getHash(user.getPassword());
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        
-        String sql = "INSERT INTO users(username,password) VALUES('" + user.getUsername() + "','" + hashedPass + "')";
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, name);
+            pstmt.setInt(2, stock);
+            pstmt.setDouble(3, price);
+            pstmt.setString(4, prod.getName());
+            pstmt.executeUpdate();
             
-//      PREPARED STATEMENT EXAMPLE
-//      String sql = "INSERT INTO users(username,password) VALUES(?,?)";
-//      PreparedStatement pstmt = conn.prepareStatement(sql)) {
-//      pstmt.setString(1, username);
-//      pstmt.setString(2, password);
-//      pstmt.executeUpdate();
-        } catch (Exception ex) {
-            System.out.print(ex);
-        }
-    }
-    
-    public void addUser(String username, String password, int role) {
-        String hashedPass = null;
-        
-        try {
-            hashedPass = getHash(password);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        
-        String sql = "INSERT INTO users(username,password,role) VALUES('" + username + "','" + hashedPass + "','" + role + "')";
-        
-        try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
             stmt.execute(sql);
             
         } catch (Exception ex) {
@@ -375,21 +404,6 @@ public class SQLite {
         } catch (Exception ex) {
             System.out.print(ex);
         }
-    }
-    
-    public Product getProduct(String name){
-        String sql = "SELECT name, stock, price FROM product WHERE name='" + name + "';";
-        Product product = null;
-        try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql)){
-            product = new Product(rs.getString("name"),
-                                   rs.getInt("stock"),
-                                   rs.getFloat("price"));
-        } catch (Exception ex) {
-            System.out.print(ex);
-        }
-        return product;
     }
 
     // Lock is increased by 1 every time the user enters the wrong password

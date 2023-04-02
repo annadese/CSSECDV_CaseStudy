@@ -246,6 +246,8 @@ public class MgmtProduct extends javax.swing.JPanel {
             Object[] message = {
                 "Edit Product Details:", nameFld, stockFld, priceFld
             };
+            
+            Product product = sqlite.getProduct((String)tableModel.getValueAt(table.getSelectedRow(), 0));
 
             int result = JOptionPane.showConfirmDialog(null, message, "EDIT PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
@@ -253,6 +255,8 @@ public class MgmtProduct extends javax.swing.JPanel {
                 System.out.println(nameFld.getText());
                 System.out.println(stockFld.getText());
                 System.out.println(priceFld.getText());
+                sqlite.editProduct(product, (String)nameFld.getText(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
+                this.init();
             }
         }
     }//GEN-LAST:event_editBtnActionPerformed
