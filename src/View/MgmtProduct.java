@@ -10,6 +10,8 @@ import Model.Product;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -25,6 +27,7 @@ public class MgmtProduct extends javax.swing.JPanel {
     public DefaultTableModel tableModel;
     String username;
     int userRole;
+    private boolean isProductValValid = false;
     
     public MgmtProduct(SQLite sqlite, int role, String username) {
         initComponents();
@@ -232,15 +235,74 @@ public class MgmtProduct extends javax.swing.JPanel {
 
         int result = JOptionPane.showConfirmDialog(null, message, "ADD PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
-        if (result == JOptionPane.OK_OPTION) {
+        /*if (result == JOptionPane.OK_OPTION) {
             System.out.println(nameFld.getText());
             System.out.println(stockFld.getText());
             System.out.println(priceFld.getText());
+            
+            checkProduct(nameFld.getText(), stockFld.getText(), priceFld.getText());
             sqlite.addProduct((String)nameFld.getText(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
             this.init();
+        }*/
+        
+        if (result == JOptionPane.OK_OPTION) {
+            checkProduct(nameFld.getText(), stockFld.getText(), priceFld.getText());
+
+            if(isProductValValid){
+                sqlite.addProduct((String)nameFld.getText(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
+                this.init();
+            }
         }
     }//GEN-LAST:event_addBtnActionPerformed
 
+    private void checkProduct(String pName, String pStock, String pPrice){
+        
+        boolean isNameValid = false;
+        boolean isStockValid = false;
+        boolean isPriceValid = false;
+        boolean isNameUnique = true;
+
+        // Checks if the product name is valid so it must not contain <, >, ', or "
+        Pattern patternName = Pattern.compile("^[^<>'\"]+$");
+        Matcher matcherName = patternName.matcher(pName);
+        boolean containsName = matcherName.find();
+        
+        // Checks if the product stock is valid
+        Pattern patternStock = Pattern.compile("^[1-9]\\d*$");
+        Matcher matcherStock = patternStock.matcher(pStock);
+        boolean containsStock = matcherStock.find();
+        
+        // Checks if the product price is valid
+        Pattern patternPrice = Pattern.compile("\\d+(,\\d{3})*(\\.\\d{1,2})?$");
+        Matcher matcherPrice = patternPrice.matcher(pPrice);
+        boolean containsPrice = matcherPrice.find();       
+        
+        // Sets the text for the error message
+        if(containsName == false && containsStock == false && containsPrice == false){
+            JOptionPane.showMessageDialog(null, "Invalid product name, stock, and price.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
+            isProductValValid = false;
+        } else if(containsName == true && containsStock == false && containsPrice == false){
+            JOptionPane.showMessageDialog(null, "Invalid product stock, and price.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
+            isProductValValid = false;
+        } else if(containsName == false && containsStock == true && containsPrice == false){
+            JOptionPane.showMessageDialog(null, "Invalid product name, and price.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
+            isProductValValid = false;
+        } else if(containsName == false && containsStock == false && containsPrice == true){
+            JOptionPane.showMessageDialog(null, "Invalid product name, and stock.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
+            isProductValValid = false;
+        } else if(containsName == false && containsStock == true && containsPrice == true){
+            JOptionPane.showMessageDialog(null, "Invalid product name.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
+            isProductValValid = false;
+        } else if(containsName == true && containsStock == false && containsPrice == true){
+            JOptionPane.showMessageDialog(null, "Invalid product stock.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
+            isProductValValid = false;
+        } else if(containsName == true && containsStock == true && containsPrice == false){
+            JOptionPane.showMessageDialog(null, "Invalid product price.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
+            isProductValValid = false;
+        } else {
+            isProductValValid = true;
+        }
+    }
     private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
         if(table.getSelectedRow() >= 0){
             JTextField nameFld = new JTextField(tableModel.getValueAt(table.getSelectedRow(), 0) + "");
