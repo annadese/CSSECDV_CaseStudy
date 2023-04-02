@@ -9,12 +9,13 @@ import java.util.regex.Pattern;
 public class Register extends javax.swing.JPanel {
 
     public Frame frame;
-    private Boolean isUsernameLenValid = false;
-    private Boolean  isUsernameCharValid = false;
-    private Boolean isUsernameValid = false;
-    private Boolean isPassValValid = false;
-    private Boolean isPassLenValid = false;
-    private Boolean isConfPassValid = false;
+    private boolean isUsernameLenValid = false;
+    private boolean  isUsernameCharValid = false;
+    private boolean isUsernameValid = false;
+    private boolean isPassValValid = false;
+    private boolean isPassLenValid = false;
+    private boolean isConfPassValid = false;
+    private boolean isPassSymbolValid = false;
     
     public Register() {
         initComponents();
@@ -160,7 +161,7 @@ public class Register extends javax.swing.JPanel {
         checkPassword();
         checkConfirmPassword();
         
-        if (isUsernameLenValid && isUsernameCharValid && isUsernameValid && isPassValValid && isPassLenValid && isConfPassValid){
+        if (isUsernameLenValid && isUsernameCharValid && isUsernameValid && isPassValValid && isPassLenValid && isPassSymbolValid && isConfPassValid){
             frame.registerAction(usernameFld.getText().toLowerCase(), passwordFld.getText(), confpassFld.getText());
             frame.createLog(usernameFld.getText(), "User registration successful");
             frame.loginNav();
@@ -268,6 +269,17 @@ public class Register extends javax.swing.JPanel {
             isPassValValid = false;
         }
         
+        // Checks if the password does not contain <, >, or ,
+        Pattern patternSymbol = Pattern.compile("^[^<> ,]+$");
+        Matcher matcherSymbol = patternSymbol.matcher(passwordFld.getText());
+        boolean containsSymbol = matcherSymbol.find();
+        
+        if(containsSymbol){
+            isPassSymbolValid = true;
+        } else{
+            isPassSymbolValid = false;
+        }
+        
         // Sets the text for the error message
         if(isPassLenValid == false && isPassValValid == false){
             errorPassword.setText("Password must have at least 8 characters and must be a combination of letters, numbers, and special characters.");
@@ -277,6 +289,9 @@ public class Register extends javax.swing.JPanel {
             errorPassword.setEnabled(true);
         } else if(isPassLenValid == true && isPassValValid == false){
             errorPassword.setText("Password must be a combination of letters, numbers, and special characters.");
+            errorPassword.setEnabled(true);
+        } else if(isPassSymbolValid == false){
+            errorPassword.setText("Password cannot contain symbols '<', '>', or , ','.");
             errorPassword.setEnabled(true);
         } else{
             errorPassword.setEnabled(false);

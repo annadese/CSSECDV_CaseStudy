@@ -16,6 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -27,6 +29,8 @@ public class MgmtUser extends javax.swing.JPanel {
     public DefaultTableModel tableModel;
     String username;
     int userRole;
+    private boolean isPassValid = false;
+
     
     public MgmtUser(SQLite sqlite, int role, String username) {
         initComponents();
@@ -248,7 +252,23 @@ public class MgmtUser extends javax.swing.JPanel {
             
             int result = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
              
-            if (result == JOptionPane.OK_OPTION && password.getText().equals(confpass.getText())) {
+            if(result == JOptionPane.OK_OPTION){
+                if (password.getText().equals(confpass.getText())) {
+                    //System.out.println(password.getText());
+                    //System.out.println(confpass.getText());
+                    checkPassword(password.getText());
+
+                    if(isPassValid){
+                        sqlite.changePassword(user, (String)password.getText());
+                    }
+                    //System.out.println(user.getUsername()); 
+                    //System.out.println(user.getPassword()); 
+                    this.init();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Passwords do not match.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
+                }
+}
+            /*if (result == JOptionPane.OK_OPTION && password.getText().equals(confpass.getText())) {
                 System.out.println(password.getText());
                 System.out.println(confpass.getText());
                 
@@ -258,10 +278,73 @@ public class MgmtUser extends javax.swing.JPanel {
                 this.init();
             } else {
                 JOptionPane.showMessageDialog(null, "Passwords do not match.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
-            }
+            }*/
         }
     }//GEN-LAST:event_chgpassBtnActionPerformed
 
+    public void checkPassword(String password){
+        
+        isPassValid = false;
+        boolean isPassLenValid = false;
+        boolean isPassValValid = false;
+        boolean isPassValSymbol = false;
+        
+        // Checks if the password has at least 8 characters
+        if (password.length() >= 8){
+            isPassLenValid = true;
+        } else{
+            isPassLenValid = false;
+        }
+
+        // Checks if the password contains at least 1 special character
+        Pattern patternSpecialChar = Pattern.compile("[^a-zA-Z0-9]");
+        Matcher matcherSpecialChar = patternSpecialChar.matcher(password);
+        boolean containsSpecialChar = matcherSpecialChar.find();
+        
+        // Checks if the password contains at least 1 letter
+        Pattern patternLetter = Pattern.compile("[a-zA-Z]");
+        Matcher matcherLetter = patternLetter.matcher(password);
+        boolean containsLetter = matcherLetter.find();
+        
+        // Checks if the password contains at least 1 number
+        Pattern patternNum = Pattern.compile("[0-9]");
+        Matcher matcherNum = patternNum.matcher(password);
+        boolean containsNum = matcherNum.find();
+        
+        if(containsSpecialChar && containsLetter && containsNum){
+            isPassValValid = true;
+        } else{
+            isPassValValid = false;
+        }
+        
+        // Checks if the password does not contain <, >, or ,
+        Pattern patternSymbol = Pattern.compile("^[^<> ,]+$");
+        Matcher matcherSymbol = patternSymbol.matcher(password);
+        boolean containsSymbol = matcherSymbol.find();
+        
+        if(containsSymbol){
+            isPassValSymbol = true;
+        } else{
+            isPassValSymbol = false;
+        }
+        
+        // Sets the text for the error message
+        if(isPassLenValid == false && isPassValValid == false){
+            JOptionPane.showMessageDialog(null, "Password must have at least 8 characters and must be a combination of letters, numbers, and special characters.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
+            isPassValid = false;
+        } else if(isPassLenValid == false && isPassValValid == true){
+            JOptionPane.showMessageDialog(null, "Password must have at least 8 characters.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
+            isPassValid = false;
+        } else if(isPassLenValid == true && isPassValValid == false){
+            JOptionPane.showMessageDialog(null, "Password must be a combination of letters, numbers, and special characters.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
+            isPassValid = false;
+        } else if(isPassValSymbol == false){
+            JOptionPane.showMessageDialog(null, "Password cannot contain symbols '<', '>', or , ','.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
+            isPassValid = false;
+        } else{
+            isPassValid = true;
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton chgpassBtn;
