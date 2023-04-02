@@ -33,17 +33,17 @@ public class StaffHome extends javax.swing.JPanel {
     }
     
     public void init(SQLite sqlite, String username){
-        mgmtHistory = new MgmtHistory(sqlite, 3, username);
-        mgmtLogs = new MgmtLogs(sqlite, 3, username);
+    //    mgmtHistory = new MgmtHistory(sqlite, 3, username);
+    //    mgmtLogs = new MgmtLogs(sqlite, 3, username);
         mgmtProduct = new MgmtProduct(sqlite, 3, username);
-        mgmtUser = new MgmtUser(sqlite, 3, username);
+    //    mgmtUser = new MgmtUser(sqlite, 3, username);
     
         Content.setLayout(contentView);
         Content.add(new Home("WELCOME STAFF!", new java.awt.Color(0,204,102)), "home");
-        Content.add(mgmtUser, "mgmtUser");
-        Content.add(mgmtHistory, "mgmtHistory");
+    //    Content.add(mgmtUser, "mgmtUser");
+    //    Content.add(mgmtHistory, "mgmtHistory");
         Content.add(mgmtProduct, "mgmtProduct");
-        Content.add(mgmtLogs, "mgmtLogs");
+    //    Content.add(mgmtLogs, "mgmtLogs");
         
         // Staff manages products of the organization. This user is able to Add, Edit, and Delete Products
         productsBtn.setVisible(true);

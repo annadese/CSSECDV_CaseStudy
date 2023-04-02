@@ -7,6 +7,7 @@ package View;
 
 import Controller.SQLite;
 import Model.User;
+import java.awt.CardLayout;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -18,6 +19,8 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -27,16 +30,18 @@ public class MgmtUser extends javax.swing.JPanel {
 
     public SQLite sqlite;
     public DefaultTableModel tableModel;
+    Frame frame;
     String username;
     int userRole;
     private boolean isPassValid = false;
 
     
-    public MgmtUser(SQLite sqlite, int role, String username) {
+    public MgmtUser(SQLite sqlite, Frame frame, int role, String username) {
         initComponents();
         this.sqlite = sqlite;
         tableModel = (DefaultTableModel)table.getModel();
         table.getTableHeader().setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14));
+        this.frame = frame;
         this.username = username;
         this.userRole = role;
         
@@ -199,11 +204,18 @@ public class MgmtUser extends javax.swing.JPanel {
             
             User user = sqlite.getUser((String)tableModel.getValueAt(table.getSelectedRow(), 0));
             
-            if(result != null){
+            if(result != null && !user.getUsername().equals(this.username)) {
                 System.out.println(user.getUsername());
                 System.out.println(result.charAt(0));
                 sqlite.editRole(user, Character.getNumericValue(result.charAt(0)));
                 this.init();
+            } else if(user.getUsername().equals(this.username)) {
+                System.out.println("User changed own role. Logging out.");
+                System.out.println(user.getUsername());
+                System.out.println(result.charAt(0));
+                sqlite.editRole(user, Character.getNumericValue(result.charAt(0)));
+                JOptionPane.showMessageDialog(null, "Logging out.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
+                frame.logout();
             }
         }
     }//GEN-LAST:event_editRoleBtnActionPerformed

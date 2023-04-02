@@ -231,7 +231,7 @@ public class Frame extends javax.swing.JFrame {
         loginPnl.frame = this;
         registerPnl.frame = this;
         
-        adminHomePnl.init(main.sqlite, username);
+        adminHomePnl.init(main.sqlite, this, username);
         clientHomePnl.init(main.sqlite, username);
         managerHomePnl.init(main.sqlite, username);
         staffHomePnl.init(main.sqlite, username);
@@ -325,6 +325,11 @@ public class Frame extends javax.swing.JFrame {
         staffBtn.setVisible(true);
         managerBtn.setVisible(true);
     }
+    
+    public void logout() {
+        frameView.show(Container, "loginPnl");
+        resetButtons();
+    }
 
     // Returns the hashed password for it to be accessed by files in View.
     public String getHashPass(String origPass)throws Exception{
@@ -350,7 +355,7 @@ public class Frame extends javax.swing.JFrame {
     public void setUser(String username) {
         this.username = username;
         
-        adminHomePnl.init(main.sqlite, username);
+        adminHomePnl.init(main.sqlite, this, username);
         clientHomePnl.init(main.sqlite, username);
         managerHomePnl.init(main.sqlite, username);
         staffHomePnl.init(main.sqlite, username);

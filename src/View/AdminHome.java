@@ -13,6 +13,7 @@ import Model.User;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.util.ArrayList;
+import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -32,11 +33,11 @@ public class AdminHome extends javax.swing.JPanel {
         initComponents();
     }
     
-    public void init(SQLite sqlite, String username){
+    public void init(SQLite sqlite, Frame frame, String username){
         //mgmtHistory = new MgmtHistory(sqlite, 5);
         mgmtLogs = new MgmtLogs(sqlite, 5, username);
         //mgmtProduct = new MgmtProduct(sqlite, 5);
-        mgmtUser = new MgmtUser(sqlite, 5, username);
+        mgmtUser = new MgmtUser(sqlite, frame, 5, username);
         
         Content.setLayout(contentView);
         Content.add(new Home("WELCOME ADMIN!", new java.awt.Color(51, 153, 255)), "home");
