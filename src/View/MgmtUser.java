@@ -34,6 +34,8 @@ public class MgmtUser extends javax.swing.JPanel {
     String username;
     int userRole;
     private boolean isPassValid = false;
+    private boolean isPassUnique = false;
+
 
     
     public MgmtUser(SQLite sqlite, Frame frame, int role, String username) {
@@ -271,29 +273,28 @@ public class MgmtUser extends javax.swing.JPanel {
                     checkPassword(password.getText());
 
                     if(isPassValid){
-                        sqlite.changePassword(user, (String)password.getText());
+                        try{
+                            checkPassExists(user.getPassword(), frame.getHashPass(password.getText()));
+                        } catch(Exception e) {
+                            System.out.println("Error in password change.");
+                        }
+                                
+                        if(isPassUnique){
+                            sqlite.changePassword(user, (String)password.getText());
+                        }
                     }
                     //System.out.println(user.getUsername()); 
                     //System.out.println(user.getPassword()); 
                     this.init();
+
                 } else {
                     JOptionPane.showMessageDialog(null, "Passwords do not match.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
                 }
-}
-            /*if (result == JOptionPane.OK_OPTION && password.getText().equals(confpass.getText())) {
-                System.out.println(password.getText());
-                System.out.println(confpass.getText());
-                
-                sqlite.changePassword(user, (String)password.getText());
-                System.out.println(user.getUsername()); 
-                System.out.println(user.getPassword()); 
-                this.init();
-            } else {
-                JOptionPane.showMessageDialog(null, "Passwords do not match.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
-            }*/
+            }
         }
     }//GEN-LAST:event_chgpassBtnActionPerformed
 
+    // Checks if the password characters are valid
     public void checkPassword(String password){
         
         isPassValid = false;
@@ -358,6 +359,16 @@ public class MgmtUser extends javax.swing.JPanel {
         }
     }
 
+     // Checks if the new password is the same as the old password
+    private void checkPassExists(String oldPass, String newPass){
+        if(!oldPass.equals(newPass)){
+            isPassUnique = true;
+        } else{
+            JOptionPane.showMessageDialog(null, "New password must be different from the old password.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
+            isPassUnique = false;
+        }        
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton chgpassBtn;
     private javax.swing.JButton deleteBtn;
