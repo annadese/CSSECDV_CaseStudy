@@ -23,13 +23,15 @@ public class MgmtProduct extends javax.swing.JPanel {
 
     public SQLite sqlite;
     public DefaultTableModel tableModel;
+    String username;
     int userRole;
     
-    public MgmtProduct(SQLite sqlite, int role) {
+    public MgmtProduct(SQLite sqlite, int role, String username) {
         initComponents();
         this.sqlite = sqlite;
         tableModel = (DefaultTableModel)table.getModel();
         table.getTableHeader().setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14));
+        this.username = username;
         this.userRole = role;
     }
 
@@ -209,7 +211,7 @@ public class MgmtProduct extends javax.swing.JPanel {
             if (result == JOptionPane.OK_OPTION) {
                 System.out.println(stockFld.getText());
                 sqlite.editProduct(prod, prod.getName(), prod.getStock() - Integer.parseInt(stockFld.getText()), prod.getPrice());
-                sqlite.addHistory("user", prod.getName(), Integer.parseInt(stockFld.getText()), new Timestamp(new Date().getTime()).toString());
+                sqlite.addHistory(this.username, prod.getName(), Integer.parseInt(stockFld.getText()), new Timestamp(new Date().getTime()).toString());
                 this.init();
             }
         }

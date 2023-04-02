@@ -32,18 +32,18 @@ public class ManagerHome extends javax.swing.JPanel {
         initComponents();
     }
     
-    public void init(SQLite sqlite){
-        mgmtHistory = new MgmtHistory(sqlite, 4);
-        mgmtLogs = new MgmtLogs(sqlite, 4);
-        mgmtProduct = new MgmtProduct(sqlite, 4);
-        mgmtUser = new MgmtUser(sqlite, 4);
+    public void init(SQLite sqlite, String username){
+        mgmtHistory = new MgmtHistory(sqlite, 4, username);
+        //mgmtLogs = new MgmtLogs(sqlite, 4);
+        mgmtProduct = new MgmtProduct(sqlite, 4, username);
+        //mgmtUser = new MgmtUser(sqlite, 4);
     
         Content.setLayout(contentView);
         Content.add(new Home("WELCOME MANAGER!", new java.awt.Color(153,102,255)), "home");
-        Content.add(mgmtUser, "mgmtUser");
+        //Content.add(mgmtUser, "mgmtUser");
         Content.add(mgmtHistory, "mgmtHistory");
         Content.add(mgmtProduct, "mgmtProduct");
-        Content.add(mgmtLogs, "mgmtLogs");
+        //Content.add(mgmtLogs, "mgmtLogs");
         
         // Manager is able to Add, Edit, and Delete Products as well as View the Purchase History of all users
         historyBtn.setVisible(true);

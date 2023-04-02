@@ -21,9 +21,10 @@ public class MgmtHistory extends javax.swing.JPanel {
 
     public SQLite sqlite;
     public DefaultTableModel tableModel;
+    String username;
     int userRole;
     
-    public MgmtHistory(SQLite sqlite, int role) {
+    public MgmtHistory(SQLite sqlite, int role, String username) {
         initComponents();
         this.sqlite = sqlite;
         tableModel = (DefaultTableModel)table.getModel();
@@ -34,6 +35,7 @@ public class MgmtHistory extends javax.swing.JPanel {
         table.getColumnModel().getColumn(3).setCellRenderer(rightAlign);
         table.getColumnModel().getColumn(4).setCellRenderer(rightAlign);
         table.getColumnModel().getColumn(5).setCellRenderer(rightAlign);
+        this.username = username;
         this.userRole = role;
         
 //        UNCOMMENT TO DISABLE BUTTONS

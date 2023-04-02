@@ -32,18 +32,18 @@ public class ClientHome extends javax.swing.JPanel {
         initComponents();
     }
     
-    public void init(SQLite sqlite){
-        mgmtHistory = new MgmtHistory(sqlite, 2);
-        mgmtLogs = new MgmtLogs(sqlite, 2);
-        mgmtProduct = new MgmtProduct(sqlite, 2);
-        mgmtUser = new MgmtUser(sqlite, 2);
+    public void init(SQLite sqlite, String username){
+        mgmtHistory = new MgmtHistory(sqlite, 2, username);
+        // mgmtLogs = new MgmtLogs(sqlite, 2);
+        mgmtProduct = new MgmtProduct(sqlite, 2, username);
+        // mgmtUser = new MgmtUser(sqlite, 2);
     
         Content.setLayout(contentView);
         Content.add(new Home("WELCOME CLIENT!", new java.awt.Color(255,102,51)), "home");
-        Content.add(mgmtUser, "mgmtUser");
+        // Content.add(mgmtUser, "mgmtUser");
         Content.add(mgmtHistory, "mgmtHistory");
         Content.add(mgmtProduct, "mgmtProduct");
-        Content.add(mgmtLogs, "mgmtLogs");
+        // Content.add(mgmtLogs, "mgmtLogs");
         
         // Clients areonly able to purchase products and view his/her own purchase history
         historyBtn.setVisible(true);
@@ -190,8 +190,7 @@ public class ClientHome extends javax.swing.JPanel {
         logsBtn.setForeground(Color.red);
         contentView.show(Content, "mgmtLogs");
     }//GEN-LAST:event_logsBtnActionPerformed
-    
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Content;

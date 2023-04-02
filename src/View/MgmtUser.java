@@ -25,13 +25,15 @@ public class MgmtUser extends javax.swing.JPanel {
 
     public SQLite sqlite;
     public DefaultTableModel tableModel;
+    String username;
     int userRole;
     
-    public MgmtUser(SQLite sqlite, int role) {
+    public MgmtUser(SQLite sqlite, int role, String username) {
         initComponents();
         this.sqlite = sqlite;
         tableModel = (DefaultTableModel)table.getModel();
         table.getTableHeader().setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14));
+        this.username = username;
         this.userRole = role;
         
 //        UNCOMMENT TO DISABLE BUTTONS
