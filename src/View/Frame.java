@@ -12,6 +12,7 @@ import javax.swing.WindowConstants;
 
 public class Frame extends javax.swing.JFrame {
 
+    String username;
     int userRole;
     
     public Frame() {
@@ -230,10 +231,10 @@ public class Frame extends javax.swing.JFrame {
         loginPnl.frame = this;
         registerPnl.frame = this;
         
-        adminHomePnl.init(main.sqlite);
-        clientHomePnl.init(main.sqlite);
-        managerHomePnl.init(main.sqlite);
-        staffHomePnl.init(main.sqlite);
+        adminHomePnl.init(main.sqlite, username);
+        clientHomePnl.init(main.sqlite, username);
+        managerHomePnl.init(main.sqlite, username);
+        staffHomePnl.init(main.sqlite, username);
         
         Container.setLayout(frameView);
         Container.add(loginPnl, "loginPnl");
@@ -344,6 +345,15 @@ public class Frame extends javax.swing.JFrame {
     // Resets the lock of user once he successfully logs in
     public void resetLock(String username){
         main.sqlite.resetLock(username);
+    }
+    
+    public void setUser(String username) {
+        this.username = username;
+        
+        adminHomePnl.init(main.sqlite, username);
+        clientHomePnl.init(main.sqlite, username);
+        managerHomePnl.init(main.sqlite, username);
+        staffHomePnl.init(main.sqlite, username);
     }
    
     // Variables declaration - do not modify//GEN-BEGIN:variables

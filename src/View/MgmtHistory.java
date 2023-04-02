@@ -48,19 +48,34 @@ public class MgmtHistory extends javax.swing.JPanel {
         for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
             tableModel.removeRow(0);
         }
-        
+        System.out.println(this.username + " " + this.userRole);
 //      LOAD CONTENTS
-        ArrayList<History> history = sqlite.getHistory();
-        for(int nCtr = 0; nCtr < history.size(); nCtr++){
-            Product product = sqlite.getProduct(history.get(nCtr).getName());
-            tableModel.addRow(new Object[]{
-                history.get(nCtr).getUsername(), 
-                history.get(nCtr).getName(), 
-                history.get(nCtr).getStock(), 
-                product.getPrice(), 
-                product.getPrice() * history.get(nCtr).getStock(), 
-                history.get(nCtr).getTimestamp()
-            });
+        if(this.userRole == 4) { // Manager
+            ArrayList<History> history4 = sqlite.getHistory();
+            for(int nCtr = 0; nCtr < history4.size(); nCtr++){
+                Product product = sqlite.getProduct(history4.get(nCtr).getName());
+                tableModel.addRow(new Object[]{
+                    history4.get(nCtr).getUsername(), 
+                    history4.get(nCtr).getName(), 
+                    history4.get(nCtr).getStock(), 
+                    product.getPrice(), 
+                    product.getPrice() * history4.get(nCtr).getStock(), 
+                    history4.get(nCtr).getTimestamp()
+                });
+            }
+        } else if (this.userRole == 2){  // Client
+            ArrayList<History> history3 = sqlite.getUserHistory(this.username);
+            for(int nCtr = 0; nCtr < history3.size(); nCtr++){
+                Product product = sqlite.getProduct(history3.get(nCtr).getName());
+                tableModel.addRow(new Object[]{
+                    history3.get(nCtr).getUsername(), 
+                    history3.get(nCtr).getName(), 
+                    history3.get(nCtr).getStock(), 
+                    product.getPrice(), 
+                    product.getPrice() * history3.get(nCtr).getStock(), 
+                    history3.get(nCtr).getTimestamp()
+                });
+            }
         }
     }
     

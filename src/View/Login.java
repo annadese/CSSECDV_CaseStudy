@@ -146,8 +146,9 @@ public class Login extends javax.swing.JPanel {
         if(!isLocked){
             // Checks for the validity of both username and password for the user to proceed to the main page
             if(isUsernameValid && isPassValid){
-                frame.mainNav(usernameFld.getText());
+                frame.mainNav(usernameFld.getText().toLowerCase());
                 frame.createLog(usernameFld.getText(), " User login successful");
+                frame.setUser(usernameFld.getText());
                 frame.setRole(frame.getUser(usernameFld.getText()).getRole());
                 frame.initFrame();
                 
