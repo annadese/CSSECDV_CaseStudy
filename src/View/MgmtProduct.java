@@ -214,7 +214,7 @@ public class MgmtProduct extends javax.swing.JPanel {
             Product prod = sqlite.getProduct((String)tableModel.getValueAt(table.getSelectedRow(), 0));
             
             if (result == JOptionPane.OK_OPTION) {
-                checkStock((String)tableModel.getValueAt(table.getSelectedRow(), 0), prod.getStock(), Integer.parseInt(stockFld.getText()));
+                checkStock((String)tableModel.getValueAt(table.getSelectedRow(), 0), prod.getStock(), stockFld.getText());
                 System.out.println(stockFld.getText());
                 
                 if(isAvailable) {
@@ -299,14 +299,17 @@ public class MgmtProduct extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_editBtnActionPerformed
 
-    private void checkStock(String pName, int pStock, int uStock) {
-        if(pStock == 0) {
+    private void checkStock(String pName, int pStock, String uStock) {
+        if (!uStock.matches("[0-9]+")){
+            isAvailable = false;
+            JOptionPane.showMessageDialog(null, "Invalid input. Please enter a number.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);  
+        } else if(pStock == 0) {
             isAvailable = false;
             JOptionPane.showMessageDialog(null, "Out of stock.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);      
-        } else if (uStock > pStock) {
+        } else if (Integer.parseInt(uStock) > pStock) {
             isAvailable = false;
             JOptionPane.showMessageDialog(null, "The quantity requested exceeds the available amount. Please input a lower quantity.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
-        } else if(uStock <= 0) {
+        } else if(Integer.parseInt(uStock) <= 0) {
             isAvailable = false;
             JOptionPane.showMessageDialog(null, "Invalid input. Please enter a value greater than 0.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
         } else {
