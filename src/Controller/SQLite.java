@@ -185,7 +185,7 @@ public class SQLite {
             Statement stmt = conn.createStatement()){
             stmt.execute(sql);
         } catch (Exception ex) {
-            System.out.print(ex);
+            System.out.print(ex); 
         }
     } 
     
@@ -271,7 +271,7 @@ public class SQLite {
     }
     
     public User getUser(String username){
-        String sql = "SELECT * FROM users WHERE username ='" + username + "';";
+        String sql = "SELECT * FROM users WHERE username ='" + username.toLowerCase() + "';";
         User user = null;
         
         try (Connection conn = DriverManager.getConnection(driverURL);
