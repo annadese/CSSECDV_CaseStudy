@@ -68,6 +68,7 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
+            stmt.execute("PRAGMA writable_schema=OFF;");
             System.out.println("Table logs in database.db created.");
         } catch (Exception ex) {
             System.out.print(ex);
