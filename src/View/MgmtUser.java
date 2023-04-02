@@ -239,18 +239,39 @@ public class MgmtUser extends javax.swing.JPanel {
     private void lockBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lockBtnActionPerformed
         if(table.getSelectedRow() >= 0){
             String state = "lock";
-            if("1".equals(tableModel.getValueAt(table.getSelectedRow(), 3) + "")){
+            int nTask = 1; // 1 = lock and 2 = unlock
+            /*if("3".equals(tableModel.getValueAt(table.getSelectedRow(), 3) + "")){
                 state = "unlock";
+            }*/
+            
+            String username = tableModel.getValueAt(table.getSelectedRow(), 0) + "";
+            
+            if(Integer.parseInt((tableModel.getValueAt(table.getSelectedRow(), 3) + "")) >= 3){
+                state = "unlock";
+                nTask = 2;
             }
             
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to " + state + " " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
             
             if (result == JOptionPane.YES_OPTION) {
-                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));              
+                setLockUnlock(nTask, username);
+                this.init();
             }
         }
     }//GEN-LAST:event_lockBtnActionPerformed
 
+    // Locks or unlocks a user
+    private void setLockUnlock(int nTask, String username){
+        if(nTask == 1){
+            sqlite.lockUser(username);
+            JOptionPane.showMessageDialog(null, "User's account has been unlocked.", "SUCCESS", JOptionPane.PLAIN_MESSAGE);
+        } else if(nTask == 2){
+            sqlite.resetLock(username);
+            JOptionPane.showMessageDialog(null, "User's account has been unlocked.", "SUCCESS", JOptionPane.PLAIN_MESSAGE);
+        }
+    }
+    
     private void chgpassBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chgpassBtnActionPerformed
         if(table.getSelectedRow() >= 0){
             JTextField password = new JPasswordField();

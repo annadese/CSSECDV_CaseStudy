@@ -455,7 +455,7 @@ public class SQLite {
     public void increaseLock(String username){
         String sql = "UPDATE users SET locked=locked+1 WHERE username='" + username +"';";
                    
-        try (Connection conn = DriverManager.getConnection(driverURL);
+        try (Connection conn  = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()){
             stmt.execute(sql);
             
@@ -467,6 +467,19 @@ public class SQLite {
     // Resets the lock of user once he successfully logs in
     public void resetLock(String username){
         String sql = "UPDATE users SET locked=0 WHERE username='" + username +"';";
+                   
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()){
+            stmt.execute(sql);
+            
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+    }
+    
+    // Locks a user's account
+    public void lockUser(String username){
+        String sql = "UPDATE users SET locked=3 WHERE username='" + username +"';";
                    
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()){

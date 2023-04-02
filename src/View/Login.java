@@ -80,7 +80,7 @@ public class Login extends javax.swing.JPanel {
         errorMaxAttempt.setEditable(false);
         errorMaxAttempt.setForeground(new java.awt.Color(204, 0, 51));
         errorMaxAttempt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        errorMaxAttempt.setText("User has reached maximum log in attempts. Please contact admin to re-activate account.");
+        errorMaxAttempt.setText("User has been locked. Please contact admin to re-activate account.");
         errorMaxAttempt.setAlignmentX(0.0F);
         errorMaxAttempt.setAlignmentY(0.0F);
         errorMaxAttempt.setBorder(null);
