@@ -203,8 +203,12 @@ public class MgmtProduct extends javax.swing.JPanel {
 
             int result = JOptionPane.showConfirmDialog(null, message, "PURCHASE PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
+            Product prod = sqlite.getProduct((String)tableModel.getValueAt(table.getSelectedRow(), 0));
+            
             if (result == JOptionPane.OK_OPTION) {
                 System.out.println(stockFld.getText());
+                sqlite.editProduct(prod, prod.getName(), prod.getStock() - Integer.parseInt(stockFld.getText()), prod.getPrice());
+                this.init();
             }
         }
     }//GEN-LAST:event_purchaseBtnActionPerformed
