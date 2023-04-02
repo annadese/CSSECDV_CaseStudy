@@ -28,6 +28,7 @@ public class MgmtProduct extends javax.swing.JPanel {
     String username;
     int userRole;
     private boolean isProductValValid = false;
+    private int cntSimilarProd = 0;
     
     public MgmtProduct(SQLite sqlite, int role, String username) {
         initComponents();
@@ -247,16 +248,50 @@ public class MgmtProduct extends javax.swing.JPanel {
         
         if (result == JOptionPane.OK_OPTION) {
             checkProduct(nameFld.getText(), stockFld.getText(), priceFld.getText());
-
-            if(isProductValValid){
+            checkExistingProduct(1, nameFld.getText(), "temp_value");
+            
+            if(isProductValValid && cntSimilarProd == 0){
                 System.out.println(nameFld.getText());
                 System.out.println(stockFld.getText());
                 System.out.println(priceFld.getText());
                 sqlite.addProduct((String)nameFld.getText(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
                 this.init();
-            }
+            } 
         }
     }//GEN-LAST:event_addBtnActionPerformed
+
+    private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
+        if(table.getSelectedRow() >= 0){
+            JTextField nameFld = new JTextField(tableModel.getValueAt(table.getSelectedRow(), 0) + "");
+            JTextField stockFld = new JTextField(tableModel.getValueAt(table.getSelectedRow(), 1) + "");
+            JTextField priceFld = new JTextField(tableModel.getValueAt(table.getSelectedRow(), 2) + "");
+
+            designer(nameFld, "PRODUCT NAME");
+            designer(stockFld, "PRODUCT STOCK");
+            designer(priceFld, "PRODUCT PRICE");
+
+            Object[] message = {
+                "Edit Product Details:", nameFld, stockFld, priceFld
+            };
+            
+            Product product = sqlite.getProduct((String)tableModel.getValueAt(table.getSelectedRow(), 0));
+
+            int result = JOptionPane.showConfirmDialog(null, message, "EDIT PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+            
+            if (result == JOptionPane.OK_OPTION) {
+                checkProduct(nameFld.getText(), stockFld.getText(), priceFld.getText());
+                checkExistingProduct(2, nameFld.getText(), product.getName());
+                
+                if(isProductValValid){
+                    System.out.println(nameFld.getText());
+                    System.out.println(stockFld.getText());
+                    System.out.println(priceFld.getText());
+                    sqlite.editProduct(product, (String)nameFld.getText(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
+                    this.init();
+                } 
+            }
+        }
+    }//GEN-LAST:event_editBtnActionPerformed
 
     private void checkProduct(String pName, String pStock, String pPrice){
         
@@ -279,7 +314,7 @@ public class MgmtProduct extends javax.swing.JPanel {
         Pattern patternPrice = Pattern.compile("\\d+(,\\d{3})*(\\.\\d{1,2})?$");
         Matcher matcherPrice = patternPrice.matcher(pPrice);
         boolean containsPrice = matcherPrice.find();       
-        
+                
         // Sets the text for the error message
         if(containsName == false && containsStock == false && containsPrice == false){
             JOptionPane.showMessageDialog(null, "Invalid product name, stock, and price.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
@@ -306,38 +341,39 @@ public class MgmtProduct extends javax.swing.JPanel {
             isProductValValid = true;
         }
     }
-    private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
-        if(table.getSelectedRow() >= 0){
-            JTextField nameFld = new JTextField(tableModel.getValueAt(table.getSelectedRow(), 0) + "");
-            JTextField stockFld = new JTextField(tableModel.getValueAt(table.getSelectedRow(), 1) + "");
-            JTextField priceFld = new JTextField(tableModel.getValueAt(table.getSelectedRow(), 2) + "");
-
-            designer(nameFld, "PRODUCT NAME");
-            designer(stockFld, "PRODUCT STOCK");
-            designer(priceFld, "PRODUCT PRICE");
-
-            Object[] message = {
-                "Edit Product Details:", nameFld, stockFld, priceFld
-            };
-            
-            Product product = sqlite.getProduct((String)tableModel.getValueAt(table.getSelectedRow(), 0));
-
-            int result = JOptionPane.showConfirmDialog(null, message, "EDIT PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-            
-            if (result == JOptionPane.OK_OPTION) {
-                checkProduct(nameFld.getText(), stockFld.getText(), priceFld.getText());
-
-                if(isProductValValid){
-                    System.out.println(nameFld.getText());
-                    System.out.println(stockFld.getText());
-                    System.out.println(priceFld.getText());
-                    sqlite.editProduct(product, (String)nameFld.getText(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
-                    this.init();
+    
+    private void checkExistingProduct(int nTask, String newName, String oldName){
+        boolean isNameUnique = true;
+        
+        // ADD PRODUCT: Checks if product name already exists in the database
+        if(nTask == 1){
+            ArrayList<Product> pList = sqlite.getProduct();
+            for(int i = 0; i < pList.size(); i++){
+                if(pList.get(i).getName().equalsIgnoreCase(newName)){
+                    isNameUnique = false;
                 }
             }
         }
-    }//GEN-LAST:event_editBtnActionPerformed
-
+        
+        // EDIT PRODUCT: Checks if product name already exists in the database
+        else if(nTask == 2){
+            
+            if(!newName.equalsIgnoreCase(oldName)){
+                ArrayList<Product> pList = sqlite.getProduct();
+                for(int i = 0; i < pList.size(); i++){
+                    if(pList.get(i).getName().equalsIgnoreCase(newName)){
+                        isNameUnique = false;
+                    }
+                }
+            }
+        }
+        
+        if(!isNameUnique){
+            JOptionPane.showMessageDialog(null, "Product already exists.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
+            isProductValValid = false;
+        }
+    }
+    
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
         if(table.getSelectedRow() >= 0){
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE PRODUCT", JOptionPane.YES_NO_OPTION);
