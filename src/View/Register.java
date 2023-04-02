@@ -269,7 +269,7 @@ public class Register extends javax.swing.JPanel {
             isPassValValid = false;
         }
         
-        // Checks if the password does not contain <, >, or ,
+        // Checks if the password does not contain <, >, ', or "
         Pattern patternSymbol = Pattern.compile("^[^<>'\"]+$");
         Matcher matcherSymbol = patternSymbol.matcher(passwordFld.getText());
         boolean containsSymbol = matcherSymbol.find();
