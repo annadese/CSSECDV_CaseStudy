@@ -249,6 +249,9 @@ public class MgmtProduct extends javax.swing.JPanel {
             checkProduct(nameFld.getText(), stockFld.getText(), priceFld.getText());
 
             if(isProductValValid){
+                System.out.println(nameFld.getText());
+                System.out.println(stockFld.getText());
+                System.out.println(priceFld.getText());
                 sqlite.addProduct((String)nameFld.getText(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
                 this.init();
             }
@@ -320,13 +323,17 @@ public class MgmtProduct extends javax.swing.JPanel {
             Product product = sqlite.getProduct((String)tableModel.getValueAt(table.getSelectedRow(), 0));
 
             int result = JOptionPane.showConfirmDialog(null, message, "EDIT PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-
+            
             if (result == JOptionPane.OK_OPTION) {
-                System.out.println(nameFld.getText());
-                System.out.println(stockFld.getText());
-                System.out.println(priceFld.getText());
-                sqlite.editProduct(product, (String)nameFld.getText(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
-                this.init();
+                checkProduct(nameFld.getText(), stockFld.getText(), priceFld.getText());
+
+                if(isProductValValid){
+                    System.out.println(nameFld.getText());
+                    System.out.println(stockFld.getText());
+                    System.out.println(priceFld.getText());
+                    sqlite.editProduct(product, (String)nameFld.getText(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
+                    this.init();
+                }
             }
         }
     }//GEN-LAST:event_editBtnActionPerformed
