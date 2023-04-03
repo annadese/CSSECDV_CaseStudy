@@ -246,7 +246,7 @@ public class MgmtHistory extends javax.swing.JPanel {
         Matcher matcherSymbol = patternSymbol.matcher(input);
         boolean containsSymbol = matcherSymbol.find();
         
-        System.out.println("went through " + containsSymbol);
+        //System.out.println("went through " + containsSymbol); // for testing only
         return containsSymbol;
     }
     

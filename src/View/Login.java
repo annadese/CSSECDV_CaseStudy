@@ -14,9 +14,10 @@ public class Login extends javax.swing.JPanel {
 
     public Frame frame;
     
-    private Boolean isUsernameValid = false;
-    private Boolean isPassValid = false;
-    private Boolean isLocked = false;
+    private boolean isUsernameValid = false;
+    private boolean isPassValid = false;
+    private boolean isRoleValid = false;
+    private boolean isLocked = false;
     
     private int userAttempts = 0;
     private int userIndex = 0;
@@ -149,25 +150,35 @@ public class Login extends javax.swing.JPanel {
             if(!isLocked){
                 // Checks for the validity of both username and password for the user to proceed to the main page
                 if(isUsernameValid && isPassValid){
-                    frame.mainNav(usernameFld.getText().toLowerCase());
-                    frame.createLog(usernameFld.getText(), " User login successful");
-                    frame.setUser(usernameFld.getText());
-                    frame.setRole(frame.getUser(usernameFld.getText()).getRole());
-                    frame.initFrame();
+                    checkRole();
+                    if(isRoleValid){
+                        frame.mainNav(usernameFld.getText().toLowerCase());
+                        frame.createLog(usernameFld.getText(), " User login successful");
+                        frame.setUser(usernameFld.getText());
+                        frame.setRole(frame.getUser(usernameFld.getText()).getRole());
+                        frame.initFrame();
 
-                    errorMaxAttempt.setEnabled(false);
-                    frame.resetLock(userList.get(userIndex).getUsername()); // resets the lock of the user since he successfully logged in
-                    resetLogInPage();
+                        errorMaxAttempt.setEnabled(false);
+                        frame.resetLock(userList.get(userIndex).getUsername()); // resets the lock of the user since he successfully logged in
+                        resetLogInPage();
+                    } else{
+                        errorMessage.setText("User is disabled. Please contact admin to re-activate account.");
+                        errorMessage.setEnabled(true);
+                        errorMaxAttempt.setEnabled(false);
+                    }
                 } else{
+                    errorMessage.setText("Username or password is invalid.");
                     errorMessage.setEnabled(true);
                     errorMaxAttempt.setEnabled(false);
                 }
             } else{
                 errorMaxAttempt.setEnabled(true);
+                errorMessage.setEnabled(false);
                 isLocked = false;
             }
         } else{
             errorMessage.setEnabled(true);
+            errorMaxAttempt.setEnabled(false);
         }
 
     }//GEN-LAST:event_loginBtnActionPerformed
@@ -236,6 +247,14 @@ public class Login extends javax.swing.JPanel {
     private void checkLock(){
         if(userList.get(userIndex).getLocked() >= 3){
             isLocked = true;
+        }
+    }
+    
+    private void checkRole(){
+        if(userList.get(userIndex).getRole() == 1){
+            isRoleValid = false;
+        } else{
+            isRoleValid = true;
         }
     }
     
