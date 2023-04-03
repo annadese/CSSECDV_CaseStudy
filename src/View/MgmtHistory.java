@@ -194,24 +194,46 @@ public class MgmtHistory extends javax.swing.JPanel {
             for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
                 tableModel.removeRow(0);
             }
+            
+            if(this.userRole == 4) {   // Manager 
+    //          LOAD ALL USERS'HISTORY
+                ArrayList<History> history = sqlite.getHistory();
+                for(int nCtr = 0; nCtr < history.size(); nCtr++){
+                    if(searchFld.getText().toLowerCase().contains(history.get(nCtr).getUsername().toLowerCase()) || 
+                       history.get(nCtr).getUsername().toLowerCase().contains(searchFld.getText().toLowerCase()) || 
+                       searchFld.getText().toLowerCase().contains(history.get(nCtr).getName().toLowerCase()) || 
+                       history.get(nCtr).getName().toLowerCase().contains(searchFld.getText().toLowerCase())){
 
-//          LOAD CONTENTS
-            ArrayList<History> history = sqlite.getHistory();
-            for(int nCtr = 0; nCtr < history.size(); nCtr++){
-                if(searchFld.getText().contains(history.get(nCtr).getUsername()) || 
-                   history.get(nCtr).getUsername().contains(searchFld.getText()) || 
-                   searchFld.getText().contains(history.get(nCtr).getName()) || 
-                   history.get(nCtr).getName().contains(searchFld.getText())){
-                
-                    Product product = sqlite.getProduct(history.get(nCtr).getName());
-                    tableModel.addRow(new Object[]{
-                        history.get(nCtr).getUsername(), 
-                        history.get(nCtr).getName(), 
-                        history.get(nCtr).getStock(), 
-                        product.getPrice(), 
-                        product.getPrice() * history.get(nCtr).getStock(), 
-                        history.get(nCtr).getTimestamp()
-                    });
+                        Product product = sqlite.getProduct(history.get(nCtr).getName());
+                        tableModel.addRow(new Object[]{
+                            history.get(nCtr).getUsername(), 
+                            history.get(nCtr).getName(), 
+                            history.get(nCtr).getStock(), 
+                            product.getPrice(), 
+                            product.getPrice() * history.get(nCtr).getStock(), 
+                            history.get(nCtr).getTimestamp()
+                        });
+                    }
+                }
+            } else if (this.userRole == 2) { // Client
+    //          LOAD OWN HISTORY
+                ArrayList<History> history = sqlite.getUserHistory(this.username);
+                for(int nCtr = 0; nCtr < history.size(); nCtr++){
+                    if(searchFld.getText().toLowerCase().contains(history.get(nCtr).getUsername().toLowerCase()) || 
+                       history.get(nCtr).getUsername().toLowerCase().contains(searchFld.getText().toLowerCase()) || 
+                       searchFld.getText().toLowerCase().contains(history.get(nCtr).getName().toLowerCase()) || 
+                       history.get(nCtr).getName().toLowerCase().contains(searchFld.getText().toLowerCase())){
+
+                        Product product = sqlite.getProduct(history.get(nCtr).getName());
+                        tableModel.addRow(new Object[]{
+                            history.get(nCtr).getUsername(), 
+                            history.get(nCtr).getName(), 
+                            history.get(nCtr).getStock(), 
+                            product.getPrice(), 
+                            product.getPrice() * history.get(nCtr).getStock(), 
+                            history.get(nCtr).getTimestamp()
+                        });
+                    }
                 }
             }
         }
