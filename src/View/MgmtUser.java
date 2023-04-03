@@ -272,7 +272,7 @@ public class MgmtUser extends javax.swing.JPanel {
     private void setLockUnlock(int nTask, String username){
         if(nTask == 1){
             sqlite.lockUser(username);
-            JOptionPane.showMessageDialog(null, "User's account has been unlocked.", "SUCCESS", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null, "User's account has been locked.", "SUCCESS", JOptionPane.PLAIN_MESSAGE);
         } else if(nTask == 2){
             sqlite.resetLock(username);
             JOptionPane.showMessageDialog(null, "User's account has been unlocked.", "SUCCESS", JOptionPane.PLAIN_MESSAGE);
