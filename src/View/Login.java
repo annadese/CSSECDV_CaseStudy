@@ -250,6 +250,7 @@ public class Login extends javax.swing.JPanel {
         }
     }
     
+    // Checks if the user is not disabled
     private void checkRole(){
         if(userList.get(userIndex).getRole() == 1){
             isRoleValid = false;
