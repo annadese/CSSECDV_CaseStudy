@@ -8,6 +8,7 @@ package View;
 import Controller.SQLite;
 import Model.Logs;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -139,8 +140,12 @@ public class MgmtLogs extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void clearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearBtnActionPerformed
-        sqlite.clearLogs();
-        this.init();
+        int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to clear logs?\nWARNING: This cannot be undone.", "DELETE USER", JOptionPane.YES_NO_OPTION);
+        
+        if(result == JOptionPane.YES_OPTION) {
+            sqlite.clearLogs();
+            this.init();
+        }
     }//GEN-LAST:event_clearBtnActionPerformed
 
     private void debugBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debugBtnActionPerformed
