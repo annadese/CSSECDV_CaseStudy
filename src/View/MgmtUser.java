@@ -323,7 +323,7 @@ public class MgmtUser extends javax.swing.JPanel {
     }//GEN-LAST:event_chgpassBtnActionPerformed
 
     // Checks if the password characters are valid
-    public void checkPassword(String password){
+    private void checkPassword(String password){
         
         isPassValid = false;
         boolean isPassLenValid = false;
