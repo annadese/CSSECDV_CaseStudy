@@ -206,25 +206,26 @@ public class MgmtUser extends javax.swing.JPanel {
             
             User user = sqlite.getUser((String)tableModel.getValueAt(table.getSelectedRow(), 0));
             
-            if(result != null && !user.getUsername().equals(this.username) && !(Character.getNumericValue(result.charAt(0)) > user.getRole())) {
-                System.out.println(user.getUsername());
-                System.out.println(result.charAt(0));
-                sqlite.editRole(user, Character.getNumericValue(result.charAt(0)));
-                this.init();
-            } else if(user.getUsername().equals(this.username)) {
+            if(result != null && user.getUsername().equals(this.username) && Character.getNumericValue(result.charAt(0)) != user.getRole()) {
                 System.out.println("User changed own role. Logging out.");
                 System.out.println(user.getUsername());
                 System.out.println(result.charAt(0));
                 sqlite.editRole(user, Character.getNumericValue(result.charAt(0)));
                 JOptionPane.showMessageDialog(null, "Logging out.", "INPUT ERROR", JOptionPane.ERROR_MESSAGE);
                 frame.logout();
-            } else if (Character.getNumericValue(result.charAt(0)) > user.getRole()) {
+            } else if (result != null && Character.getNumericValue(result.charAt(0)) > user.getRole()) {
                 int result2 = JOptionPane.showConfirmDialog(null, "Are you sure you want to elevate this user's privileges?", "EDIT USER ROLE", JOptionPane.YES_NO_OPTION);
                 if(result2 == JOptionPane.YES_OPTION) {
                     sqlite.editRole(user, Character.getNumericValue(result.charAt(0)));
                     this.init();
                 }
                      
+            } else if (result != null && Character.getNumericValue(result.charAt(0)) < user.getRole()) {
+                int result2 = JOptionPane.showConfirmDialog(null, "Are you sure you want to reduce this user's privileges?", "EDIT USER ROLE", JOptionPane.YES_NO_OPTION);
+                if(result2 == JOptionPane.YES_OPTION) {
+                    sqlite.editRole(user, Character.getNumericValue(result.charAt(0)));
+                    this.init();
+                }
             }
         }
     }//GEN-LAST:event_editRoleBtnActionPerformed
